@@ -28,6 +28,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@once-ui-system/core": [
+        "./node_modules/@once-ui-system/core/dist/index"
       ]
     },
     "target": "ES2017"

@@ -1,4 +1,4 @@
-import {
+import type {
   About,
   Blog,
   Gallery,
@@ -8,12 +8,13 @@ import {
   Social,
   Work,
 } from "@/types";
+import React from "react";
 import { Line, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
   firstName: "Asterion",
   lastName: "Nightcaller",
-  name: `Asterion Nightcaller`,
+  name: "Asterion Nightcaller",
   role: "VTuber / Producer / Software Dev / Engineer",
   avatar: "/images/avatar.jpg",
   email: "[lynkazoyuu@gmail.com]",
@@ -145,14 +146,14 @@ const about: About = {
         timeframe: "2022 - Present",
         role: "Senior Design Engineer",
         achievements: [
-          <>
+          <React.Fragment key="achieve-1">
             Redesigned the UI/UX for the FLY platform, resulting in a 20%
             increase in user engagement and 30% faster load times.
-          </>,
-          <>
+          </React.Fragment>,
+          <React.Fragment key="achieve-2">
             Spearheaded the integration of AI tools into design workflows,
             enabling designers to iterate 50% faster.
-          </>,
+          </React.Fragment>,
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -169,14 +170,14 @@ const about: About = {
         timeframe: "2018 - 2022",
         role: "Lead Designer",
         achievements: [
-          <>
+          <React.Fragment key="achieve-3">
             Developed a design system that unified the brand across multiple
             platforms, improving design consistency by 40%.
-          </>,
-          <>
+          </React.Fragment>,
+          <React.Fragment key="achieve-4">
             Led a cross-functional team to launch a new product line,
             contributing to a 15% increase in overall company revenue.
-          </>,
+          </React.Fragment>,
         ],
         images: [],
       },
