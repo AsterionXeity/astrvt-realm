@@ -3,6 +3,7 @@ import type {
   Blog,
   Gallery,
   Home,
+  Newsletter,
   SocialStatusConfig,
   Person,
   Social,
@@ -20,6 +21,12 @@ const person: Person = {
   email: "[lynkazoyuu@gmail.com]",
   location: "Europe/Amsterdam", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["English", "Japanese"], // optional: Leave the array empty if you don't want to display languages
+};
+
+const newsletter: Newsletter = {
+  display: true,
+  title: <>Subscribe to {person.firstName}'s Youtube Channel</>,
+  description: <>My weekly updates about VTubing and tech</>,
 };
 
 const socialStatus: SocialStatusConfig = {
@@ -338,4 +345,4 @@ const gallery: Gallery = {
   ],
 };
 
-export { person, social, socialStatus, home, about, blog, work, gallery };
+export { person, social, newsletter, socialStatus, home, about, blog, work, gallery };

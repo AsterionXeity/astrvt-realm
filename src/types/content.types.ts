@@ -29,6 +29,12 @@ export type Person = {
   languages?: string[];
 };
 
+export type Newsletter = {
+  display: boolean;
+  title: React.ReactNode;
+  description: React.ReactNode;
+};
+
 /**
  * Social Status Section
  * @description Display the subscriber count and status on the Home page
