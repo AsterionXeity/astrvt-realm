@@ -32,15 +32,19 @@ const newsletter: Newsletter = {
 const socialStatus: SocialStatusConfig = {
   display: true,
   title: <>Join the Community</>,
-  description: <>Follow my channels and join our growing community of VTuber enthusiasts.</>,
+  description: (
+    <>
+      Follow my channels and join our growing community of VTuber enthusiasts.
+    </>
+  ),
   youtube: {
     subs: "1.5K",
-    link: "https://www.youtube.com/@AsterionVT"
+    link: "https://www.youtube.com/@AsterionVT",
   },
   twitch: {
     subs: "500",
-    link: "https://www.twitch.tv/asterionvt"
-  }
+    link: "https://www.twitch.tv/asterionvt",
+  },
 };
 
 const social: Social = [
@@ -345,4 +349,14 @@ const gallery: Gallery = {
   ],
 };
 
-export { person, social, newsletter, socialStatus, home, about, blog, work, gallery };
+export {
+  person,
+  social,
+  newsletter,
+  socialStatus,
+  home,
+  about,
+  blog,
+  work,
+  gallery,
+};

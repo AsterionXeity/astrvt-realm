@@ -1,9 +1,20 @@
 import { mailchimp, socialStatus } from "@/resources";
-import { Button, Heading, Text, Background, Column, Row } from "@once-ui-system/core";
+import {
+  Button,
+  Heading,
+  Text,
+  Background,
+  Column,
+  Row,
+} from "@once-ui-system/core";
 import type { opacity, SpacingToken } from "@once-ui-system/core";
+import { getYouTubeSubs, getTwitchFollowers } from "@/lib/social";
 
-export const SocialStatus: React.FC<React.ComponentProps<typeof Column>> = ({ ...flex }) => {
+export const SocialStatus = async ({ ...flex }: React.ComponentProps<typeof Column>) => {
   if (!socialStatus.display) return null;
+
+  const liveYoutubeSubs = await getYouTubeSubs(socialStatus.youtube.link);
+  const liveTwitchFollowers = await getTwitchFollowers(socialStatus.twitch.link);
 
   return (
     <Column
@@ -16,8 +27,7 @@ export const SocialStatus: React.FC<React.ComponentProps<typeof Column>> = ({ ..
       align="center"
       background="surface"
       border="neutral-alpha-weak"
-      {...flex}
-    >
+      {...flex}>
       <Background
         top="0"
         position="absolute"
@@ -64,22 +74,64 @@ export const SocialStatus: React.FC<React.ComponentProps<typeof Column>> = ({ ..
         <Heading marginBottom="s" variant="display-strong-xs">
           {socialStatus.title}
         </Heading>
-        <Text wrap="balance" marginBottom="l" variant="body-default-l" onBackground="neutral-weak">
+        <Text
+          wrap="balance"
+          marginBottom="l"
+          variant="body-default-l"
+          onBackground="neutral-weak">
           {socialStatus.description}
         </Text>
       </Column>
-      
-      <Row gap="24" fillWidth horizontal="center" s={{ direction: "column", align: "center" }}>
-        <Column align="center" padding="24" background="neutral-alpha-weak" radius="m" border="neutral-alpha-weak" flex={1}>
-          <Heading variant="display-strong-xl" marginBottom="4">{socialStatus.youtube.subs}</Heading>
-          <Text onBackground="neutral-weak" marginBottom="16">YouTube Subscribers</Text>
-          <Button href={socialStatus.youtube.link} prefixIcon="youtube" size="m" variant="secondary" fillWidth>Subscribe</Button>
+
+      <Row
+        gap="24"
+        fillWidth
+        horizontal="center"
+        s={{ direction: "column", align: "center" }}>
+        <Column
+          align="center"
+          padding="24"
+          background="neutral-alpha-weak"
+          radius="m"
+          border="neutral-alpha-weak"
+          flex={1}>
+          <Heading variant="display-strong-xl" marginBottom="4">
+            {liveYoutubeSubs || socialStatus.youtube.subs}
+          </Heading>
+          <Text onBackground="neutral-weak" marginBottom="16">
+            YouTube Subscribers
+          </Text>
+          <Button
+            href={socialStatus.youtube.link}
+            prefixIcon="youtube"
+            size="m"
+            variant="secondary"
+            fillWidth>
+            Subscribe
+          </Button>
         </Column>
 
-        <Column align="center" padding="24" background="neutral-alpha-weak" radius="m" border="neutral-alpha-weak" flex={1}>
-          <Heading variant="display-strong-xl" marginBottom="4">{socialStatus.twitch.subs}</Heading>
-          <Text onBackground="neutral-weak" marginBottom="16">Twitch Followers</Text>
-          <Button href={socialStatus.twitch.link} prefixIcon="twitch" size="m" variant="secondary" fillWidth>Follow</Button>
+        <Column
+          align="center"
+          padding="24"
+          background="neutral-alpha-weak"
+          radius="m"
+          border="neutral-alpha-weak"
+          flex={1}>
+          <Heading variant="display-strong-xl" marginBottom="4">
+            {liveTwitchFollowers || socialStatus.twitch.subs}
+          </Heading>
+          <Text onBackground="neutral-weak" marginBottom="16">
+            Twitch Followers
+          </Text>
+          <Button
+            href={socialStatus.twitch.link}
+            prefixIcon="twitch"
+            size="m"
+            variant="secondary"
+            fillWidth>
+            Follow
+          </Button>
         </Column>
       </Row>
     </Column>
