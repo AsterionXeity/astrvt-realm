@@ -2,7 +2,7 @@
 export {
   person,
   social,
-  newsletter,
+  socialStatus,
   home,
   about,
   blog,

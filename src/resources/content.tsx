@@ -3,7 +3,7 @@ import type {
   Blog,
   Gallery,
   Home,
-  Newsletter,
+  SocialStatusConfig,
   Person,
   Social,
   Work,
@@ -22,10 +22,18 @@ const person: Person = {
   languages: ["English", "Japanese"], // optional: Leave the array empty if you don't want to display languages
 };
 
-const newsletter: Newsletter = {
+const socialStatus: SocialStatusConfig = {
   display: true,
-  title: <>Subscribe to {person.firstName}'s Youtube Channel</>,
-  description: <>My weekly updates about VTubing and tech</>,
+  title: <>Join the Community</>,
+  description: <>Follow my channels and join our growing community of VTuber enthusiasts.</>,
+  youtube: {
+    subs: "1.5K",
+    link: "https://www.youtube.com/@AsterionVT"
+  },
+  twitch: {
+    subs: "500",
+    link: "https://www.twitch.tv/asterionvt"
+  }
 };
 
 const social: Social = [
@@ -330,4 +338,4 @@ const gallery: Gallery = {
   ],
 };
 
-export { person, social, newsletter, home, about, blog, work, gallery };
+export { person, social, socialStatus, home, about, blog, work, gallery };

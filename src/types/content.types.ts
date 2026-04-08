@@ -1,5 +1,5 @@
-import { IconName } from "@/resources/icons";
-import { zones } from "tzdata";
+import type { IconName } from "@/resources/icons";
+import type { zones } from "tzdata";
 
 /**
  * IANA time zone string (e.g., 'Asia/Calcutta', 'Europe/Vienna').
@@ -30,16 +30,21 @@ export type Person = {
 };
 
 /**
- * Newsletter Section
- * @description The below information will be displayed on the Home page in Newsletter block
+ * Social Status Section
+ * @description Display the subscriber count and status on the Home page
  */
-export type Newsletter = {
-  /** Whether to display the newsletter section */
+export type SocialStatusConfig = {
   display: boolean;
-  /** Title of the newsletter   */
   title: React.ReactNode;
-  /** Description of the newsletter */
   description: React.ReactNode;
+  youtube: {
+    subs: string;
+    link: string;
+  };
+  twitch: {
+    subs: string;
+    link: string;
+  };
 };
 
 /**
