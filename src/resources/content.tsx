@@ -13,11 +13,11 @@ import React from "react";
 import { Line, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
-  firstName: "Asterion",
+  firstName: "AsterionVT",
   lastName: "Nightcaller",
   name: "Asterion Nightcaller",
   role: "VTuber / Producer / Software Dev / Engineer",
-  avatar: "/images/avatar.jpg",
+  avatar: "/images/new-avatar.png",
   email: "[lynkazoyuu@gmail.com]",
   location: "Europe/Amsterdam", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["English", "Japanese"], // optional: Leave the array empty if you don't want to display languages
@@ -117,12 +117,7 @@ const home: Home = {
   },
   subline: (
     <>
-      I'm Selene, a design engineer at{" "}
-      <Text as="span" size="xl" weight="strong">
-        ONCE UI
-      </Text>
-      , where I craft intuitive <br /> user experiences. After hours, I build my
-      own projects.
+      An Astral Elf that was lost floating in space wondering what existence can bring, loves to do magick and reach limits beyond the stars~
     </>
   ),
 };
@@ -140,7 +135,7 @@ const about: About = {
     display: true,
   },
   calendar: {
-    display: true,
+    display: false,
     link: "https://cal.com/asterionvt",
   },
   intro: {
@@ -148,11 +143,7 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        SWith 2 years of experience in the tech industry, I have worked on
-        various projects, variorums from web development to mobile apps and
-        backend systems. My expertise lies in JavaScript, CSS, HTML, Node.js,
-        and I am always looking for new challenges to further develop my skills.
-        After hours, I build my own projects.
+        My name is AsterionVT and I am a VTuber, Producer, Software Developer/Engineer. I like streaming and I love to produce content for the community. I have worked on various projects. My expertise lies in JavaScript, CSS, HTML, Node.js, and I am always looking for new challenges to further develop my skills.
       </>
     ),
   },
@@ -290,12 +281,10 @@ const blog: Blog = {
 };
 
 const work: Work = {
-  path: "/work",
-  label: "Work",
-  title: `Projects – ${person.name}`,
-  description: `Design and dev projects by ${person.name}`,
-  // Create new project pages by adding a new .mdx file to app/blog/posts
-  // All projects will be listed on the /home and /work routes
+  path: "/content",
+  label: "Content",
+  title: `Content – ${person.name}`,
+  description: `YouTube videos and live streams by ${person.name}`,
 };
 
 const gallery: Gallery = {
@@ -307,43 +296,48 @@ const gallery: Gallery = {
   // These are placeholder images, replace with your own
   images: [
     {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
+      src: "/images/gallery/Ref_Sheet.png",
+      alt: "Character Reference Sheet",
       orientation: "horizontal",
     },
     {
-      src: "/images/gallery/vertical-4.jpg",
-      alt: "image",
+      src: "/images/gallery/IMG_6129.JPG",
+      alt: "Photo",
       orientation: "vertical",
     },
     {
-      src: "/images/gallery/horizontal-3.jpg",
-      alt: "image",
+      src: "/images/gallery/Ref_Sheet_clear.png",
+      alt: "Character Reference Sheet Clear",
       orientation: "horizontal",
     },
     {
-      src: "/images/gallery/vertical-1.jpg",
-      alt: "image",
+      src: "/images/gallery/IMG_6169.PNG",
+      alt: "Artwork 1",
       orientation: "vertical",
     },
     {
-      src: "/images/gallery/vertical-2.jpg",
-      alt: "image",
+      src: "/images/gallery/IMG_6170.PNG",
+      alt: "Artwork 2",
       orientation: "vertical",
     },
     {
-      src: "/images/gallery/horizontal-2.jpg",
-      alt: "image",
+      src: "/images/gallery/Asterionvt - EYE BANNER.jpg",
+      alt: "Eye Banner",
       orientation: "horizontal",
     },
     {
-      src: "/images/gallery/horizontal-4.jpg",
-      alt: "image",
+      src: "/images/gallery/asterion.png",
+      alt: "Asterion Portrait",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/unnamed (1).jpg",
+      alt: "Illustration",
       orientation: "horizontal",
     },
     {
-      src: "/images/gallery/vertical-3.jpg",
-      alt: "image",
+      src: "/images/gallery/vgenemote.png",
+      alt: "VGen Emote",
       orientation: "vertical",
     },
   ],

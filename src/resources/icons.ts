@@ -1,4 +1,4 @@
-import { IconType } from "react-icons";
+import type { IconType } from "react-icons";
 
 import {
   HiArrowUpRight,
@@ -12,7 +12,10 @@ import {
   HiOutlineDocument,
   HiOutlineGlobeAsiaAustralia,
   HiOutlineRocketLaunch,
+  HiBars3,
+  HiXMark,
 } from "react-icons/hi2";
+
 
 import {
   PiHouseDuotone,
@@ -29,7 +32,7 @@ import {
   SiSupabase,
 } from "react-icons/si";
 
-import { FaDiscord, FaGithub, FaLinkedin, FaX, FaThreads, FaInstagram, FaXTwitter, FaFacebook, FaPinterest, FaWhatsapp, FaReddit, FaTelegram, } from "react-icons/fa6";
+import { FaDiscord, FaGithub, FaLinkedin, FaX, FaThreads, FaInstagram, FaXTwitter, FaFacebook, FaPinterest, FaWhatsapp, FaReddit, FaTelegram, FaYoutube, FaTwitch } from "react-icons/fa6";
 
 export const iconLibrary: Record<string, IconType> = {
   arrowUpRight: HiArrowUpRight,
@@ -44,6 +47,8 @@ export const iconLibrary: Record<string, IconType> = {
   home: PiHouseDuotone,
   gallery: PiImageDuotone,
   discord: FaDiscord,
+  menu: HiBars3,
+  close: HiXMark,
   eye: HiOutlineEye,
   eyeOff: HiOutlineEyeSlash,
   github: FaGithub,
@@ -64,6 +69,8 @@ export const iconLibrary: Record<string, IconType> = {
   reddit: FaReddit,
   telegram: FaTelegram,
   instagram: FaInstagram,
+  youtube: FaYoutube,
+  twitch: FaTwitch,
 };
 
 export type IconLibrary = typeof iconLibrary;

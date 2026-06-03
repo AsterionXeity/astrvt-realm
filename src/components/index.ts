@@ -9,3 +9,4 @@ export { ScrollToHash } from "@/components/ScrollToHash";
 export { ThemeToggle } from "@/components/ThemeToggle";
 export { CustomMDX } from "@/components/mdx";
 export { SocialStatus } from "@/components/SocialStatus";
+export { InteractiveMesh } from "@/components/InteractiveMesh";

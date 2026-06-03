@@ -10,16 +10,7 @@ export async function getYouTubeSubs(link: string): Promise<string | null> {
   const handle = handleMatch[1];
   
   try {
-    const searchRes = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${handle}&key=${apiKey}`, { cache: 'no-store' });
-    if (!searchRes.ok) {
-      console.error("YouTube Search API Error:", searchRes.status, await searchRes.text());
-      return null;
-    }
-    const searchData = await searchRes.json();
-    const channelId = searchData.items?.[0]?.snippet?.channelId;
-    if (!channelId) return null;
-
-    const statsRes = await fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`, { cache: 'no-store' });
+    const statsRes = await fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=statistics&forHandle=@${handle}&key=${apiKey}`, { cache: 'no-store' });
     if (!statsRes.ok) {
       console.error("YouTube Stats API Error:", statsRes.status, await statsRes.text());
       return null;
@@ -97,4 +88,57 @@ export async function getTwitchFollowers(link: string): Promise<string | null> {
     console.error("Twitch Fetch Error:", e);
     return null;
   }
+}
+
+export interface TwitchStatus {
+  isLive: boolean;
+  title?: string;
+  viewerCount?: number;
+}
+
+export async function getTwitchLiveStatus(login: string): Promise<TwitchStatus> {
+  const clientId = process.env.TWITCH_CLIENT_ID;
+  const clientSecret = process.env.TWITCH_CLIENT_SECRET;
+  if (!clientId || !clientSecret) return { isLive: false };
+
+  try {
+    const tokenRes = await fetch(
+      "https://id.twitch.tv/oauth2/token",
+      {
+        method: "POST",
+        body: new URLSearchParams({
+          client_id: clientId,
+          client_secret: clientSecret,
+          grant_type: "client_credentials",
+        }),
+        cache: "no-store",
+      }
+    );
+    if (!tokenRes.ok) return { isLive: false };
+    const tokenData = await tokenRes.json();
+    const token = tokenData.access_token;
+
+    const streamRes = await fetch(
+      `https://api.twitch.tv/helix/streams?user_login=${login}`,
+      {
+        headers: {
+          "Client-Id": clientId,
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
+      }
+    );
+    if (!streamRes.ok) return { isLive: false };
+    const streamData = await streamRes.json();
+    if (streamData.data && streamData.data.length > 0) {
+      return {
+        isLive: true,
+        title: streamData.data[0].title,
+        viewerCount: streamData.data[0].viewer_count,
+      };
+    }
+  } catch (e) {
+    console.error("Twitch Live Status Fetch Error:", e);
+  }
+  return { isLive: false };
 }

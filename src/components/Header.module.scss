@@ -1,21 +1,43 @@
 @use "./breakpoints.scss" as breakpoints;
 
-.mask {
-    pointer-events: none;
+.headerContainer {
+    top: 0;
     backdrop-filter: blur(0.5rem);
-    background: linear-gradient(to bottom, var(--page-background), var(--static-transparent));
-    mask-image: linear-gradient(rgba(0,0,0) 25%, rgba(0, 0, 0, 0) 100%);
-    mask-size: 100% 100%;
+    -webkit-backdrop-filter: blur(0.5rem);
+    background: var(--neutral-alpha-weak);
+    transition: all 0.2s ease;
 }
 
-@media (max-width: breakpoints.$s) {
-    .position {
-        top: auto;
-        bottom: var(--static-space-24);
-    }
+.mobileOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-top: 5.5rem !important; /* Push menu content below sticky header */
+    background: var(--page-background);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    overflow-y: auto;
+    z-index: 99;
+    animation: slideDown 0.25s ease-out forwards;
+}
 
-    .mask {
-        transform: rotate(180deg);
-        bottom: 0;
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.timeWrapper {
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-code), monospace;
+    display: inline-flex;
+    min-width: 5.5rem;
+    justify-content: flex-start;
 }
