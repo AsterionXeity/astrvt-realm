@@ -26,7 +26,7 @@ const person: Person = {
 const newsletter: Newsletter = {
   display: true,
   title: <>Subscribe to {person.firstName}'s Youtube Channel</>,
-  description: <>My weekly updates about VTubing and tech</>,
+  description: <>Yippeee Video's</>,
 };
 
 const socialStatus: SocialStatusConfig = {
@@ -34,7 +34,7 @@ const socialStatus: SocialStatusConfig = {
   title: <>Join the Community</>,
   description: (
     <>
-      Follow my channels and join our growing community of VTuber enthusiasts.
+      Follow my channels and stay updated.
     </>
   ),
   youtube: {
@@ -58,15 +58,15 @@ const social: Social = [
     essential: true,
   },
   {
-    name: "Twitter",
-    icon: "twitter",
-    link: "https://twitter.com/AsterionVT",
-    essential: true,
-  },
-  {
     name: "Twitch",
     icon: "twitch",
     link: "https://www.twitch.tv/asterionvt",
+    essential: true,
+  },
+  {
+    name: "Twitter",
+    icon: "twitter",
+    link: "https://twitter.com/AsterionVT",
     essential: true,
   },
   {
@@ -193,19 +193,22 @@ const about: About = {
       },
     ],
   },
-  studies: {
-    display: false, // set to false to hide this section
-    title: "Studies",
-    institutions: [
-      {
-        name: "MBO Utrecht",
-        description: <>Studied software engineering.</>,
-      },
-      {
-        name: "Software Developer",
-        description: <>Studied Developing apps and websites.</>,
-      },
-    ],
+  lore: {
+    display: true, // set to false to hide this section
+    title: "Lore",
+    description: (
+      <>
+        Once a high elf star scholar, Asterion gazed too long into the abyss of the void, where whispers promised power beyond comprehension. The pact transformed them, their skin now carries the cosmos, horns grew as a mark of the demonic bond, and their eyes burn like twin embers. They wander between realms, collecting “soul dust”, which they channel through music, games, and stories.
+        <br/><br/>
+        Personality
+        <br/>
+        Charismatic but mischievous  flirts with danger (and sometimes with chat).
+        Switches between smooth, deep-toned voice acting and playful teasing.
+        Occasionally Lewd/Flirty.
+        Chaotic good with dramatic monologue.
+
+      </>
+    ),
   },
   technical: {
     display: false, // set to false to hide this section

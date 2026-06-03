@@ -176,19 +176,13 @@ export interface About extends BasePageConfig {
       }>;
     }>;
   };
-  /** Studies/education section */
-  studies: {
-    /** Whether to display studies section */
+  lore: {
+    /** Whether to display lore section */
     display: boolean;
-    /** Title for the studies section */
+    /** Title for the lore section */
     title: string;
-    /** List of institutions attended */
-    institutions: Array<{
-      /** Institution name */
-      name: string;
-      /** Description of studies */
-      description: React.ReactNode;
-    }>;
+    /** Text content of the section */
+    description: React.ReactNode;
   };
   /** Technical skills section */
   technical: {
