@@ -15,6 +15,7 @@ import {
 } from "@once-ui-system/core";
 import { person } from "@/resources";
 import { getTwitchLiveStatus, type TwitchStatus } from "@/lib/social";
+import { TwitchEmbed } from "@/components";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
@@ -264,7 +265,10 @@ export default async function Content() {
           radius="l"
           padding="24"
           gap="16"
-          style={{ transition: "all 0.25s ease" }}
+          style={{
+            transition: "all 0.25s ease",
+            gridColumn: twitchStatus.isLive ? "1 / -1" : undefined
+          }}
         >
           <Row vertical="center" gap="16" fillWidth>
             <Avatar src={person.avatar} size="l" />
@@ -288,13 +292,14 @@ export default async function Content() {
           </Row>
 
           {twitchStatus.isLive && (
-            <Column gap="8" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
+            <Column gap="12" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
               <Text variant="body-default-s" weight="strong" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                 {twitchStatus.title}
               </Text>
-              <Text variant="body-default-xs" onBackground="neutral-weak">
+              <Text variant="body-default-xs" onBackground="neutral-weak" paddingBottom="4">
                 🔴 Watching with {twitchStatus.viewerCount} viewers
               </Text>
+              <TwitchEmbed />
             </Column>
           )}
 

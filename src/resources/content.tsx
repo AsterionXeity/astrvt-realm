@@ -101,19 +101,19 @@ const home: Home = {
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Demonic Elf Astral Lord~ VStreamer | Producer | Artist</>,
+  headline: <>AsterionVT</>,
   featured: {
     display: true,
     title: (
       <Row gap="12" vertical="center">
-        <strong className="ml-4">Once UI</strong>{" "}
+        <strong className="ml-4">AsterionVT</strong>{" "}
         <Line background="brand-alpha-strong" vert height="20" />
         <Text marginRight="4" onBackground="brand-medium">
-          Featured work
+          New Content
         </Text>
       </Row>
     ),
-    href: "/work/building-once-ui-a-customizable-design-system",
+    href: "/content",
   },
   subline: (
     <>
@@ -194,7 +194,7 @@ const about: About = {
     ],
   },
   studies: {
-    display: true, // set to false to hide this section
+    display: false, // set to false to hide this section
     title: "Studies",
     institutions: [
       {
@@ -290,8 +290,8 @@ const work: Work = {
 const gallery: Gallery = {
   path: "/gallery",
   label: "Gallery",
-  title: `Photo gallery – ${person.name}`,
-  description: `A photo collection by ${person.name}`,
+  title: `Art gallery – ${person.name}`,
+  description: `Commissioned works of ${person.name}`,
   // Images by https://lorant.one
   // These are placeholder images, replace with your own
   images: [
@@ -299,6 +299,21 @@ const gallery: Gallery = {
       src: "/images/gallery/Ref_Sheet.png",
       alt: "Character Reference Sheet",
       orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/asterion.png",
+      alt: "Asterion Portrait",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/unnamed (1).jpg",
+      alt: "Illustration",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/IMG_6170.PNG",
+      alt: "Artwork 2",
+      orientation: "vertical",
     },
     {
       src: "/images/gallery/IMG_6129.JPG",
@@ -316,23 +331,8 @@ const gallery: Gallery = {
       orientation: "vertical",
     },
     {
-      src: "/images/gallery/IMG_6170.PNG",
-      alt: "Artwork 2",
-      orientation: "vertical",
-    },
-    {
       src: "/images/gallery/Asterionvt - EYE BANNER.jpg",
       alt: "Eye Banner",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/asterion.png",
-      alt: "Asterion Portrait",
-      orientation: "vertical",
-    },
-    {
-      src: "/images/gallery/unnamed (1).jpg",
-      alt: "Illustration",
       orientation: "horizontal",
     },
     {

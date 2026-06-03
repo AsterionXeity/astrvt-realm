@@ -10,3 +10,4 @@ export { ThemeToggle } from "@/components/ThemeToggle";
 export { CustomMDX } from "@/components/mdx";
 export { SocialStatus } from "@/components/SocialStatus";
 export { InteractiveMesh } from "@/components/InteractiveMesh";
+export { TwitchEmbed } from "@/components/TwitchEmbed";

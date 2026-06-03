@@ -1,5 +1,6 @@
 "use client";
 
+// biome-ignore lint/style/useImportType: <explanation>
 import {
   BorderStyle,
   ChartMode,
@@ -18,9 +19,48 @@ import {
   TransitionStyle,
 } from "@once-ui-system/core";
 import { style, dataStyle } from "../resources";
+import { useEffect } from "react";
 import { iconLibrary } from "../resources/icons";
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    // Prevent right-click context menu on images, videos, and media elements
+    const handleContextMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "IMG" ||
+        target.tagName === "VIDEO" ||
+        target.closest("img") ||
+        target.closest("video") ||
+        target.closest("[data-media]") ||
+        target.closest(".material-card")
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    // Prevent dragging images or videos to other tabs or desktop
+    const handleDragStart = (e: DragEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "IMG" ||
+        target.tagName === "VIDEO" ||
+        target.closest("img") ||
+        target.closest("video")
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("dragstart", handleDragStart);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("dragstart", handleDragStart);
+    };
+  }, []);
+
   return (
     <LayoutProvider>
       <ThemeProvider
