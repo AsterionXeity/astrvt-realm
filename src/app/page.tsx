@@ -14,9 +14,9 @@ import {
   Media,
 } from "@once-ui-system/core";
 import { home, about, person, baseURL, routes } from "@/resources";
-import { SocialStatus, InteractiveMesh } from "@/components";
+import { SocialStatus, InteractiveMesh, FeaturedBadge } from "@/components";
 import { Analytics } from "@vercel/analytics/next"
-import { getTwitchLiveStatus } from "@/lib/social";
+import { getTwitchLiveStatus, getLatestYouTubeVideoId } from "@/lib/social";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -29,7 +29,10 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const twitchStatus = await getTwitchLiveStatus("asterionvt");
+  const [twitchStatus, latestVideoId] = await Promise.all([
+    getTwitchLiveStatus("asterionvt"),
+    getLatestYouTubeVideoId("AsterionVT"),
+  ]);
 
   return (
     <>
@@ -105,27 +108,7 @@ export default async function Home() {
               </SmartLink>
             </RevealFx>
           ) : (
-            home.featured.display && (
-              <RevealFx
-                fillWidth
-                horizontal="center"
-                paddingTop="16"
-                paddingBottom="32"
-                paddingLeft="12"
-              >
-                <Badge
-                  background="brand-alpha-weak"
-                  paddingX="12"
-                  paddingY="4"
-                  onBackground="neutral-strong"
-                  textVariant="label-default-s"
-                  arrow={false}
-                  href={home.featured.href}
-                >
-                  <Row paddingY="2">{home.featured.title}</Row>
-                </Badge>
-              </RevealFx>
-            )
+            <FeaturedBadge latestVideoId={latestVideoId} />
           )}
           <RevealFx translateY="4" fillWidth horizontal="center" paddingBottom="16">
             <Heading wrap="balance" variant="display-strong-l">

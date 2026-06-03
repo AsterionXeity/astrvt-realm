@@ -20,16 +20,17 @@ export const ShortsCarousel = ({ shorts }: ShortsCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % shorts.length);
+    setActiveIndex((prev) => (prev + 2) % shorts.length);
   };
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + shorts.length) % shorts.length);
+    setActiveIndex((prev) => (prev - 2 + shorts.length) % shorts.length);
   };
 
-  const currentShort = shorts[activeIndex];
-
   if (!shorts || shorts.length === 0) return null;
+
+  const firstShort = shorts[activeIndex];
+  const secondShort = shorts[(activeIndex + 1) % shorts.length];
 
   return (
     <Column fillWidth gap="16">
@@ -83,38 +84,75 @@ export const ShortsCarousel = ({ shorts }: ShortsCarouselProps) => {
       {/* Mobile Slider Layout: Visible on mobile, hidden on desktop */}
       <div className={styles.mobileSlider}>
         <Column fillWidth gap="16" horizontal="center">
-          <SmartLink
-            href={`https://www.youtube.com/shorts/${currentShort.id}`}
-            style={{ textDecoration: "none", width: "100%", maxWidth: "280px" }}
-          >
-            <Column className="material-card" radius="l" overflow="hidden" fillWidth>
-              <Media src={currentShort.thumbnail} alt={currentShort.title} aspectRatio="9/16" fillWidth />
-              <Column padding="16" gap="12" fillWidth>
-                <Text
-                  variant="body-default-m"
-                  weight="strong"
-                  onBackground="neutral-strong"
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    minHeight: "2.8rem",
-                  }}
-                >
-                  {currentShort.title}
-                </Text>
-                <Row fillWidth horizontal="between" vertical="center" paddingTop="8">
-                  <span style={{ pointerEvents: "none", fontSize: "var(--font-size-body-s)", color: "var(--neutral-on-background-weak)", background: "var(--neutral-alpha-weak)", padding: "4px 8px", borderRadius: "4px" }}>
-                    Watch
-                  </span>
-                  <Text variant="body-default-xs" onBackground="neutral-weak">
-                    {new Date(currentShort.publishedAt).toLocaleDateString()}
+          <Row gap="12" fillWidth horizontal="center" style={{ maxWidth: "520px" }}>
+            {/* First Short */}
+            <SmartLink
+              href={`https://www.youtube.com/shorts/${firstShort.id}`}
+              style={{ textDecoration: "none", flex: 1, minWidth: "0" }}
+            >
+              <Column className="material-card" radius="l" overflow="hidden" fillWidth>
+                <Media src={firstShort.thumbnail} alt={firstShort.title} aspectRatio="9/16" fillWidth />
+                <Column padding="12" gap="8" fillWidth>
+                  <Text
+                    variant="body-default-s"
+                    weight="strong"
+                    onBackground="neutral-strong"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      minHeight: "2.4rem",
+                    }}
+                  >
+                    {firstShort.title}
                   </Text>
-                </Row>
+                  <Row fillWidth horizontal="between" vertical="center" paddingTop="4">
+                    <span style={{ pointerEvents: "none", fontSize: "var(--font-size-body-xs)", color: "var(--neutral-on-background-weak)", background: "var(--neutral-alpha-weak)", padding: "2px 6px", borderRadius: "4px" }}>
+                      Watch
+                    </span>
+                    <Text variant="body-default-xs" onBackground="neutral-weak">
+                      {new Date(firstShort.publishedAt).toLocaleDateString()}
+                    </Text>
+                  </Row>
+                </Column>
               </Column>
-            </Column>
-          </SmartLink>
+            </SmartLink>
+
+            {/* Second Short */}
+            <SmartLink
+              href={`https://www.youtube.com/shorts/${secondShort.id}`}
+              style={{ textDecoration: "none", flex: 1, minWidth: "0" }}
+            >
+              <Column className="material-card" radius="l" overflow="hidden" fillWidth>
+                <Media src={secondShort.thumbnail} alt={secondShort.title} aspectRatio="9/16" fillWidth />
+                <Column padding="12" gap="8" fillWidth>
+                  <Text
+                    variant="body-default-s"
+                    weight="strong"
+                    onBackground="neutral-strong"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      minHeight: "2.4rem",
+                    }}
+                  >
+                    {secondShort.title}
+                  </Text>
+                  <Row fillWidth horizontal="between" vertical="center" paddingTop="4">
+                    <span style={{ pointerEvents: "none", fontSize: "var(--font-size-body-xs)", color: "var(--neutral-on-background-weak)", background: "var(--neutral-alpha-weak)", padding: "2px 6px", borderRadius: "4px" }}>
+                      Watch
+                    </span>
+                    <Text variant="body-default-xs" onBackground="neutral-weak">
+                      {new Date(secondShort.publishedAt).toLocaleDateString()}
+                    </Text>
+                  </Row>
+                </Column>
+              </Column>
+            </SmartLink>
+          </Row>
 
           {/* Navigation Controls */}
           <Row gap="16" vertical="center" horizontal="center" fillWidth>
@@ -122,16 +160,16 @@ export const ShortsCarousel = ({ shorts }: ShortsCarouselProps) => {
               icon="chevronLeft"
               onClick={handlePrev}
               variant="secondary"
-              aria-label="Previous Short"
+              aria-label="Previous Shorts"
             />
             <Text variant="body-default-s" onBackground="neutral-weak">
-              {activeIndex + 1} / {shorts.length}
+              {Math.floor(activeIndex / 2) + 1} / {Math.ceil(shorts.length / 2)}
             </Text>
             <IconButton
               icon="chevronRight"
               onClick={handleNext}
               variant="secondary"
-              aria-label="Next Short"
+              aria-label="Next Shorts"
             />
           </Row>
         </Column>

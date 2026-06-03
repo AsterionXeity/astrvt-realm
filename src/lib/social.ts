@@ -142,3 +142,33 @@ export async function getTwitchLiveStatus(login: string): Promise<TwitchStatus> 
   }
   return { isLive: false };
 }
+
+export async function getLatestYouTubeVideoId(handle: string): Promise<string | null> {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    // Resolve channel ID (cache for 24 hours since it never changes)
+    const searchRes = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${handle}&key=${apiKey}`,
+      { next: { revalidate: 86400 } }
+    );
+    if (!searchRes.ok) return null;
+    const searchData = await searchRes.json();
+    const channelId = searchData.items?.[0]?.snippet?.channelId;
+    if (!channelId) return null;
+
+    // Get latest video upload (cache for 30 minutes)
+    const uploadsRes = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=1&order=date&type=video&key=${apiKey}`,
+      { next: { revalidate: 1800 } }
+    );
+    if (!uploadsRes.ok) return null;
+    const uploadsData = await uploadsRes.json();
+    const latestVideoId = uploadsData.items?.[0]?.id?.videoId;
+    return latestVideoId || null;
+  } catch (e) {
+    console.error("Error fetching latest YouTube video ID:", e);
+    return null;
+  }
+}

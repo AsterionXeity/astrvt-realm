@@ -15,7 +15,7 @@ import {
 } from "@once-ui-system/core";
 import { person } from "@/resources";
 import { getTwitchLiveStatus, type TwitchStatus } from "@/lib/social";
-import { TwitchEmbed, ShortsCarousel } from "@/components";
+import { TwitchEmbed, ShortsCarousel, MarkContentSeen } from "@/components";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
@@ -192,8 +192,11 @@ export default async function Content() {
       : { isLive: false, liveTitle: "", shorts: [], videos: [] } as YouTubeData,
   ]);
 
+  const latestVideoId = youtubeData.videos[0]?.id || youtubeData.shorts[0]?.id || null;
+
   return (
     <Column maxWidth="m" paddingTop="32" gap="xl" fillWidth horizontal="center">
+      <MarkContentSeen latestVideoId={latestVideoId} />
       {/* Floating Twitch Live Widget */}
       {twitchStatus.isLive && (
         <RevealFx speed="fast" delay={0.1}>
