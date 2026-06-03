@@ -11,6 +11,7 @@ import {
   Meta,
   Line,
   SmartLink,
+  Media,
 } from "@once-ui-system/core";
 import { home, about, person, baseURL, routes } from "@/resources";
 import { SocialStatus, InteractiveMesh } from "@/components";
@@ -47,6 +48,15 @@ export default async function Home() {
           image: `${baseURL}${person.avatar}`,
         }}
       />
+      <RevealFx translateY="8" fillWidth>
+        <Media
+          src="/images/gallery/Asterionvt - EYE BANNER.jpg"
+          alt="AsterionVT Eye Banner"
+          aspectRatio="original"
+          radius="l"
+          className="material-card"
+        />
+      </RevealFx>
       <Column fillWidth horizontal="center" gap="m">
         <Column maxWidth="s" horizontal="center" align="center">
           {twitchStatus.isLive ? (
