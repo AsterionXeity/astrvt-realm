@@ -181,3 +181,55 @@ img, video, [data-media], .material-card {
   -ms-user-select: none !important;
 }
 
+/* Floating Notification Entry & Exit Animations */
+@keyframes notification-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes notification-slide-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+}
+
+.notification-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  width: 320px;
+  max-width: calc(100vw - 48px);
+  animation: notification-slide-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.notification-container.closing {
+  animation: notification-slide-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.notification-card {
+  background: rgba(20, 20, 25, 0.8) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--neutral-alpha-weak) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+  border-radius: var(--radius-l) !important;
+  transition: transform 0.2s ease !important;
+}
+
+.notification-card:hover {
+  transform: translateY(-2px) !important;
+}
+
+

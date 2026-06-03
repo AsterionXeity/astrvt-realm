@@ -14,3 +14,4 @@ export { TwitchEmbed } from "@/components/TwitchEmbed";
 export { ShortsCarousel } from "@/components/ShortsCarousel";
 export { FeaturedBadge } from "@/components/FeaturedBadge";
 export { MarkContentSeen } from "@/components/MarkContentSeen";
+export { FloatingOrbs } from "@/components/FloatingOrbs";

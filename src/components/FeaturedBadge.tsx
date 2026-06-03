@@ -1,63 +1,97 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RevealFx, Badge, Row } from "@once-ui-system/core";
-import { home } from "@/resources";
+import { Column, Row, Text, Button, IconButton, Avatar } from "@once-ui-system/core";
+import { home, person } from "@/resources";
 
 interface FeaturedBadgeProps {
   latestVideoId: string | null;
 }
 
 export const FeaturedBadge = ({ latestVideoId }: FeaturedBadgeProps) => {
-  const [shouldShow, setShouldShow] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     // 1. Check if it's the first time visiting the site
     const hasVisitedBefore = localStorage.getItem("visited_portfolio");
 
     if (!hasVisitedBefore) {
-      // First load: show the badge and set visited key
-      setShouldShow(true);
-      localStorage.setItem("visited_portfolio", "true");
+      // Delay showing the notification slightly for better UX (1.2s after load)
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+        localStorage.setItem("visited_portfolio", "true");
+      }, 1200);
+      return () => clearTimeout(timer);
     } else if (latestVideoId) {
       // Subsequent load: show only if there is a new video ID
       const lastSeenId = localStorage.getItem("last_seen_video_id");
       if (lastSeenId !== latestVideoId) {
-        setShouldShow(true);
+        const timer = setTimeout(() => {
+          setIsVisible(true);
+        }, 1200);
+        return () => clearTimeout(timer);
       }
     }
   }, [latestVideoId]);
 
-  const handleBadgeClick = () => {
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsClosing(true);
+    // Wait for the exit animation (400ms) before removing from DOM
+    setTimeout(() => {
+      setIsVisible(false);
+      setIsClosing(false);
+      if (latestVideoId) {
+        localStorage.setItem("last_seen_video_id", latestVideoId);
+      }
+    }, 400);
+  };
+
+  const handleView = () => {
     if (latestVideoId) {
       localStorage.setItem("last_seen_video_id", latestVideoId);
     }
-    setShouldShow(false);
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      setIsClosing(false);
+    }, 400);
   };
 
-  if (!shouldShow || !home.featured.display) return null;
+  if (!isVisible || !home.featured.display) return null;
 
   return (
-    <RevealFx
-      fillWidth
-      horizontal="center"
-      paddingTop="16"
-      paddingBottom="32"
-      paddingLeft="12"
-    >
-      <div onClick={handleBadgeClick} style={{ cursor: "pointer", display: "inline-flex" }}>
-        <Badge
-          background="brand-alpha-weak"
-          paddingX="12"
-          paddingY="4"
-          onBackground="neutral-strong"
-          textVariant="label-default-s"
-          arrow={false}
-          href={home.featured.href}
-        >
-          <Row paddingY="2">{home.featured.title}</Row>
-        </Badge>
-      </div>
-    </RevealFx>
+    <div className={`notification-container ${isClosing ? "closing" : ""}`}>
+      <Column className="notification-card" padding="16" gap="12" fillWidth>
+        <Row vertical="center" gap="12" fillWidth>
+          <Avatar src={person.avatar} size="m" />
+          <Column gap="2" flex={1}>
+            <Text weight="strong" variant="body-default-m" onBackground="neutral-strong">
+              New Content Alert!
+            </Text>
+            <Text variant="body-default-xs" onBackground="neutral-weak">
+              Check out my latest updates.
+            </Text>
+          </Column>
+          <IconButton
+            icon="close"
+            size="s"
+            variant="ghost"
+            onClick={handleClose}
+            aria-label="Dismiss notification"
+          />
+        </Row>
+        <Row fillWidth horizontal="end" gap="8">
+          <Button
+            href={home.featured.href}
+            onClick={handleView}
+            label="View Content"
+            size="s"
+            variant="primary"
+          />
+        </Row>
+      </Column>
+    </div>
   );
 };

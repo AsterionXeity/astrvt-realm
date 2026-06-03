@@ -257,13 +257,13 @@ export const Header = () => {
           {/* Mobile external links */}
           <Column gap="12" fillWidth>
             {githubLink && (
-              <ToggleButton
+              <Button
                 href={githubLink}
                 label="GitHub"
-                suffixIcon="arrowUpRight"
-                variant="ghost"
+                prefixIcon="github"
+                size="m"
+                variant="secondary"
                 fillWidth
-                horizontal="start"
               />
             )}
             {discordLink && (
