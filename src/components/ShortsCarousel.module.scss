@@ -1,0 +1,17 @@
+@use "./breakpoints.scss" as breakpoints;
+
+.desktopGrid {
+  display: block;
+
+  @include breakpoints.s {
+    display: none;
+  }
+}
+
+.mobileSlider {
+  display: none;
+
+  @include breakpoints.s {
+    display: block;
+  }
+}

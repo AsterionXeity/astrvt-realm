@@ -14,6 +14,8 @@ import {
   HiOutlineRocketLaunch,
   HiBars3,
   HiXMark,
+  HiChevronLeft,
+  HiChevronRight,
 } from "react-icons/hi2";
 
 
@@ -71,6 +73,8 @@ export const iconLibrary: Record<string, IconType> = {
   instagram: FaInstagram,
   youtube: FaYoutube,
   twitch: FaTwitch,
+  chevronLeft: HiChevronLeft,
+  chevronRight: HiChevronRight,
 };
 
 export type IconLibrary = typeof iconLibrary;

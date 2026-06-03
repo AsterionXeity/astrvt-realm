@@ -15,7 +15,7 @@ import {
 } from "@once-ui-system/core";
 import { person } from "@/resources";
 import { getTwitchLiveStatus, type TwitchStatus } from "@/lib/social";
-import { TwitchEmbed } from "@/components";
+import { TwitchEmbed, ShortsCarousel } from "@/components";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
@@ -453,64 +453,7 @@ export default async function Content() {
           Latest Shorts
         </Heading>
         {youtubeData.shorts.length > 0 ? (
-          <Grid
-            columns="5"
-            m={{ columns: "4" }}
-            s={{ columns: "3" }}
-            xs={{ columns: "2" }}
-            gap="16"
-            fillWidth
-          >
-            {youtubeData.shorts.map((short: YouTubeMedia) => (
-              <SmartLink
-                key={short.id}
-                href={`https://www.youtube.com/shorts/${short.id}`}
-                style={{ textDecoration: "none", width: "100%" }}
-              >
-                  <Column
-                    className="material-card"
-                    radius="l"
-                    overflow="hidden"
-                    fillWidth
-                  >
-                    <Media
-                      src={short.thumbnail}
-                      alt={short.title}
-                      aspectRatio="9/16"
-                      fillWidth
-                    />
-                    <Column padding="16" gap="12" fillWidth>
-                      <Text
-                        variant="body-default-m"
-                        weight="strong"
-                        onBackground="neutral-strong"
-                        style={{
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          minHeight: "2.8rem",
-                        }}
-                      >
-                        {short.title}
-                      </Text>
-                      <Row fillWidth horizontal="between" vertical="center" paddingTop="8">
-                        <Button
-                          label="Watch"
-                          suffixIcon="arrowUpRight"
-                          size="s"
-                          variant="secondary"
-                          style={{ pointerEvents: "none" }}
-                        />
-                        <Text variant="body-default-xs" onBackground="neutral-weak">
-                          {new Date(short.publishedAt).toLocaleDateString()}
-                        </Text>
-                      </Row>
-                    </Column>
-                  </Column>
-                </SmartLink>
-            ))}
-          </Grid>
+          <ShortsCarousel shorts={youtubeData.shorts} />
         ) : (
           <Row padding="24" horizontal="center" border="neutral-alpha-weak" radius="m" background="page" fillWidth>
             <Text variant="body-default-s" onBackground="neutral-weak">
