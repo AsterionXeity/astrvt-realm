@@ -12,7 +12,7 @@ import {
   Schema,
   Row,
 } from "@once-ui-system/core";
-import { baseURL, about, person, social } from "@/resources";
+import { baseURL, about, person, social, home } from "@/resources";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
 import React from "react";
@@ -22,7 +22,7 @@ export async function generateMetadata() {
     title: about.title,
     description: about.description,
     baseURL: baseURL,
-    image: `/api/og/generate?title=${encodeURIComponent(about.title)}`,
+    image: about.image || home.image,
     path: about.path,
   });
 }
@@ -63,7 +63,7 @@ export default function About() {
         title={about.title}
         description={about.description}
         path={about.path}
-        image={`/api/og/generate?title=${encodeURIComponent(about.title)}`}
+        image={about.image || home.image}
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,

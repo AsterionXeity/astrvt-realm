@@ -65,7 +65,11 @@
   --scheme-neutral-600-10: rgba(137,152,159,0.1);
   --scheme-neutral-600-30: rgba(137,152,159,0.3);
   /*
-}*/
+}
+
+:root {
+  --custom-gold: #FCC46F;
+}
 
 .content-card:hover {
   transform: translateY(-4px);
@@ -233,12 +237,12 @@ img, video, [data-media], .material-card {
 }
 
 [data-theme="dark"] {
-  --page-background: #090c1d !important;
+  --page-background: #0e0a1a !important;
 }
 
 [data-theme="dark"] body,
 [data-theme="dark"] .page-background {
-  background: linear-gradient(135deg, #44176d 0%, #0d1233 100%) !important;
+  background: linear-gradient(135deg, #44176d 0%, #181030 100%) !important;
   background-attachment: fixed !important;
 }
 

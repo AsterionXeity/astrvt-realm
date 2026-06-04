@@ -97,7 +97,7 @@ const social: Social = [
 
 const home: Home = {
   path: "/",
-  image: "/api/og/generate?title=Asterion Nightcaller's Portfolio",
+  image: "/images/gallery/Asterionvt - EYE BANNER.jpg",
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
@@ -124,6 +124,7 @@ const home: Home = {
 
 const about: About = {
   path: "/about",
+  image: "/images/gallery/asterion.png",
   label: "About",
   title: `About – ${person.name}`,
   description: `Meet ${person.name}, ${person.role} from ${person.location}`,
@@ -292,6 +293,7 @@ const blog: Blog = {
 
 const work: Work = {
   path: "/content",
+  image: "/images/gallery/Asterionvt - EYE BANNER.jpg",
   label: "Content",
   title: `Content – ${person.name}`,
   description: `YouTube videos and live streams by ${person.name}`,
@@ -299,6 +301,7 @@ const work: Work = {
 
 const gallery: Gallery = {
   path: "/gallery",
+  image: "/images/gallery/Ref_Sheet.png",
   label: "Gallery",
   title: `Art gallery – ${person.name}`,
   description: `Commissioned works of ${person.name}`,
