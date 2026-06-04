@@ -20,7 +20,8 @@ export const SocialStatus = async ({ ...flex }: React.ComponentProps<typeof Colu
     <Column
       overflow="hidden"
       fillWidth
-      padding="xl"
+      paddingY="24"
+      paddingX="32"
       radius="l"
       marginBottom="m"
       horizontal="center"
@@ -70,41 +71,41 @@ export const SocialStatus = async ({ ...flex }: React.ComponentProps<typeof Colu
           color: mailchimp.effects.lines.color,
         }}
       />
-      <Column maxWidth="m" horizontal="center" align="center" marginBottom="32">
-        <Heading marginBottom="s" variant="display-strong-xs">
+      <Column maxWidth="m" horizontal="center" align="center" marginBottom="16">
+        <Heading marginBottom="4" variant="display-strong-xs">
           {socialStatus.title}
         </Heading>
         <Text
           wrap="balance"
-          marginBottom="l"
-          variant="body-default-l"
+          variant="body-default-m"
           onBackground="neutral-weak">
           {socialStatus.description}
         </Text>
       </Column>
 
       <Row
-        gap="24"
+        gap="16"
         fillWidth
         horizontal="center"
         s={{ direction: "column", align: "center" }}>
         <Column
           align="center"
-          padding="24"
+          paddingY="12"
+          paddingX="16"
           background="neutral-alpha-weak"
           radius="m"
           border="neutral-alpha-weak"
           flex={1}>
-          <Heading variant="display-strong-xl" marginBottom="4">
+          <Heading variant="display-strong-l" marginBottom="2">
             {liveYoutubeSubs || socialStatus.youtube.subs}
           </Heading>
-          <Text onBackground="neutral-weak" marginBottom="16">
+          <Text variant="body-default-s" onBackground="neutral-weak" marginBottom="12">
             YouTube Subscribers
           </Text>
           <Button
             href={socialStatus.youtube.link}
             prefixIcon="youtube"
-            size="m"
+            size="s"
             variant="secondary"
             fillWidth>
             Subscribe
@@ -113,21 +114,22 @@ export const SocialStatus = async ({ ...flex }: React.ComponentProps<typeof Colu
 
         <Column
           align="center"
-          padding="24"
+          paddingY="12"
+          paddingX="16"
           background="neutral-alpha-weak"
           radius="m"
           border="neutral-alpha-weak"
           flex={1}>
-          <Heading variant="display-strong-xl" marginBottom="4">
+          <Heading variant="display-strong-l" marginBottom="2">
             {liveTwitchFollowers || socialStatus.twitch.subs}
           </Heading>
-          <Text onBackground="neutral-weak" marginBottom="16">
+          <Text variant="body-default-s" onBackground="neutral-weak" marginBottom="12">
             Twitch Followers
           </Text>
           <Button
             href={socialStatus.twitch.link}
             prefixIcon="twitch"
-            size="m"
+            size="s"
             variant="secondary"
             fillWidth>
             Follow

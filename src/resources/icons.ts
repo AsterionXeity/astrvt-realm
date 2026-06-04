@@ -34,7 +34,32 @@ import {
   SiSupabase,
 } from "react-icons/si";
 
-import { FaDiscord, FaGithub, FaLinkedin, FaX, FaThreads, FaInstagram, FaXTwitter, FaFacebook, FaPinterest, FaWhatsapp, FaReddit, FaTelegram, FaYoutube, FaTwitch } from "react-icons/fa6";
+import {
+  FaDiscord,
+  FaGithub,
+  FaLinkedin,
+  FaX,
+  FaThreads,
+  FaInstagram,
+  FaXTwitter,
+  FaFacebook,
+  FaPinterest,
+  FaWhatsapp,
+  FaReddit,
+  FaTelegram,
+  FaYoutube,
+  FaTwitch,
+  FaMedal,
+  FaSteam,
+  FaGift,
+  FaDollarSign,
+  FaGamepad,
+  FaLink,
+  FaCrown,
+  FaBluesky,
+  FaMusic,
+  FaSpotify,
+} from "react-icons/fa6";
 
 export const iconLibrary: Record<string, IconType> = {
   arrowUpRight: HiArrowUpRight,
@@ -75,6 +100,16 @@ export const iconLibrary: Record<string, IconType> = {
   twitch: FaTwitch,
   chevronLeft: HiChevronLeft,
   chevronRight: HiChevronRight,
+  medal: FaMedal,
+  steam: FaSteam,
+  gift: FaGift,
+  dollar: FaDollarSign,
+  gamepad: FaGamepad,
+  link: FaLink,
+  crown: FaCrown,
+  bluesky: FaBluesky,
+  music: FaMusic,
+  spotify: FaSpotify,
 };
 
 export type IconLibrary = typeof iconLibrary;

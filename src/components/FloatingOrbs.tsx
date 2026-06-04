@@ -11,6 +11,9 @@ interface Particle {
   alpha: number;
   fadeSpeed: number;
   fadingIn: boolean;
+  type: 'orb' | 'star';
+  rotation: number;
+  rotationSpeed: number;
 }
 
 export const FloatingOrbs = () => {
@@ -25,7 +28,7 @@ export const FloatingOrbs = () => {
 
     let animationFrameId: number;
     let particles: Particle[] = [];
-    const maxParticles = 50; // Balanced density that looks premium and performs well
+    const maxParticles = 65; // Slightly increased for a richer space feel
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -33,15 +36,23 @@ export const FloatingOrbs = () => {
     };
 
     const createParticle = (initRandomY = false): Particle => {
+      const type = Math.random() > 0.65 ? 'star' : 'orb'; // 35% stars, 65% orbs
+      const radius = type === 'star'
+        ? 2.5 + Math.random() * 4.5 // Star sizes
+        : 0.6 + Math.random() * 1.8; // Orb sizes
+
       return {
         x: Math.random() * canvas.width,
-        y: initRandomY ? Math.random() * canvas.height : canvas.height + 10, // Spawn from bottom or randomly on init
-        vx: (Math.random() - 0.5) * 0.15, // Slow horizontal drift
-        vy: -0.1 - Math.random() * 0.3, // Slow upward drift
-        radius: 0.6 + Math.random() * 1.8, // Various small particle sizes
-        alpha: Math.random() * 0.4,
+        y: initRandomY ? Math.random() * canvas.height : canvas.height + 10,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: -0.05 - Math.random() * 0.2,
+        radius,
+        alpha: Math.random() * 0.5,
         fadeSpeed: 0.001 + Math.random() * 0.003,
         fadingIn: Math.random() > 0.5,
+        type,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.002,
       };
     };
 
@@ -65,7 +76,7 @@ export const FloatingOrbs = () => {
         // Pulse opacity (fade in/out)
         if (p.fadingIn) {
           p.alpha += p.fadeSpeed;
-          if (p.alpha >= 0.6) {
+          if (p.alpha >= 0.7) {
             p.fadingIn = false;
           }
         } else {
@@ -75,11 +86,38 @@ export const FloatingOrbs = () => {
           }
         }
 
-        // Draw soft glowing particle
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-        ctx.fill();
+        // Draw particle based on its type
+        if (p.type === 'star') {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          
+          ctx.beginPath();
+          ctx.moveTo(0, -p.radius);
+          ctx.quadraticCurveTo(0, 0, p.radius, 0);
+          ctx.quadraticCurveTo(0, 0, 0, p.radius);
+          ctx.quadraticCurveTo(0, 0, -p.radius, 0);
+          ctx.quadraticCurveTo(0, 0, 0, -p.radius);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+          ctx.fill();
+          
+          // Draw a small central core glow
+          ctx.beginPath();
+          ctx.arc(0, 0, p.radius * 0.25, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(p.alpha * 1.3, 1)})`;
+          ctx.fill();
+          
+          ctx.restore();
+
+          // Update rotation
+          p.rotation += p.rotationSpeed;
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+          ctx.fill();
+        }
 
         // Respawn if off-screen (top or side boundaries)
         if (p.y < -20 || p.x < -20 || p.x > canvas.width + 20) {

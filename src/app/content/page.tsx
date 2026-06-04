@@ -15,7 +15,7 @@ import {
 } from "@once-ui-system/core";
 import { person } from "@/resources";
 import { getTwitchLiveStatus, type TwitchStatus } from "@/lib/social";
-import { TwitchEmbed, ShortsCarousel, MarkContentSeen } from "@/components";
+import { TwitchEmbed, ShortsCarousel, MarkContentSeen, ScrollReveal } from "@/components";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
@@ -199,7 +199,7 @@ export default async function Content() {
       <MarkContentSeen latestVideoId={latestVideoId} />
       {/* Floating Twitch Live Widget */}
       {twitchStatus.isLive && (
-        <RevealFx speed="fast" delay={0.1}>
+        <ScrollReveal translateY="8" fillWidth>
           <SmartLink
             href="https://www.twitch.tv/asterionvt"
             style={{ textDecoration: "none", marginBottom: "-8px" }}
@@ -211,9 +211,9 @@ export default async function Content() {
               paddingX="16"
               gap="12"
               style={{
-                background: "rgba(145, 70, 255, 0.15)",
-                border: "1px solid rgba(145, 70, 255, 0.3)",
-                backdropFilter: "blur(8px)",
+                background: "rgba(145, 70, 255, 0.2)",
+                border: "1px solid rgba(145, 70, 255, 0.35)",
+                backdropFilter: "blur(20px)",
                 boxShadow: "0 0 15px rgba(145, 70, 255, 0.2)",
                 maxWidth: "100%",
               }}
@@ -242,136 +242,140 @@ export default async function Content() {
               </Text>
             </Row>
           </SmartLink>
-        </RevealFx>
+        </ScrollReveal>
       )}
 
       {/* Title */}
-      <Column fillWidth gap="8" align="center">
-        <Heading variant="display-strong-m">Content Hub</Heading>
-        <Text onBackground="neutral-weak" variant="body-default-s">
-          Check out the latest live streams, videos, and shorts
-        </Text>
-      </Column>
+      <ScrollReveal translateY="8" fillWidth>
+        <Column fillWidth gap="8" align="center">
+          <Heading variant="display-strong-m">Content Hub</Heading>
+          <Text onBackground="neutral-weak" variant="body-default-s">
+            Check out the latest live streams, videos, and shorts
+          </Text>
+        </Column>
+      </ScrollReveal>
 
       {/* Live Indicators Section */}
-      <Grid
-        columns="2"
-        s={{ columns: "1" }}
-        gap="16"
-        fillWidth
-      >
-        {/* Twitch Card */}
-        <Column
-          className="material-card"
-          background="page"
-          border="neutral-alpha-weak"
-          radius="l"
-          padding="24"
+      <ScrollReveal translateY="12" fillWidth>
+        <Grid
+          columns="2"
+          s={{ columns: "1" }}
           gap="16"
-          style={{
-            transition: "all 0.25s ease",
-            gridColumn: twitchStatus.isLive ? "1 / -1" : undefined
-          }}
+          fillWidth
         >
-          <Row vertical="center" gap="16" fillWidth>
-            <Avatar src={person.avatar} size="l" />
-            <Column gap="4" flex={1}>
-              <Text weight="strong" variant="heading-strong-m">
-                Twitch Stream
-              </Text>
-              <Text variant="body-default-xs" onBackground="neutral-weak">
-                @asterionvt
-              </Text>
-            </Column>
-            {twitchStatus.isLive ? (
-              <Badge background="danger-alpha-strong" onBackground="danger-strong" style={{ animation: "pulse 2s infinite" }}>
-                LIVE
-              </Badge>
-            ) : (
-              <Badge background="neutral-alpha-weak" onBackground="neutral-weak">
-                Offline
-              </Badge>
+          {/* Twitch Card */}
+          <Column
+            className="material-card"
+            background="page"
+            border="neutral-alpha-weak"
+            radius="l"
+            padding="24"
+            gap="16"
+            style={{
+              transition: "all 0.25s ease",
+              gridColumn: twitchStatus.isLive ? "1 / -1" : undefined
+            }}
+          >
+            <Row vertical="center" gap="16" fillWidth>
+              <Avatar src={person.avatar} size="l" />
+              <Column gap="4" flex={1}>
+                <Text weight="strong" variant="heading-strong-m">
+                  Twitch Stream
+                </Text>
+                <Text variant="body-default-xs" onBackground="neutral-weak">
+                  @asterionvt
+                </Text>
+              </Column>
+              {twitchStatus.isLive ? (
+                <Badge background="danger-alpha-strong" onBackground="danger-strong" style={{ animation: "pulse 2s infinite" }}>
+                  LIVE
+                </Badge>
+              ) : (
+                <Badge background="neutral-alpha-weak" onBackground="neutral-weak">
+                  Offline
+                </Badge>
+              )}
+            </Row>
+
+            {twitchStatus.isLive && (
+              <Column gap="12" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
+                <Text variant="body-default-s" weight="strong" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                  {twitchStatus.title}
+                </Text>
+                <Text variant="body-default-xs" onBackground="neutral-weak" paddingBottom="4">
+                  🔴 Watching with {twitchStatus.viewerCount} viewers
+                </Text>
+                <TwitchEmbed />
+              </Column>
             )}
-          </Row>
 
-          {twitchStatus.isLive && (
-            <Column gap="12" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
-              <Text variant="body-default-s" weight="strong" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                {twitchStatus.title}
-              </Text>
-              <Text variant="body-default-xs" onBackground="neutral-weak" paddingBottom="4">
-                🔴 Watching with {twitchStatus.viewerCount} viewers
-              </Text>
-              <TwitchEmbed />
-            </Column>
-          )}
+            <Row fillWidth horizontal="end" paddingTop="8">
+              <Button
+                href="https://www.twitch.tv/asterionvt"
+                label="Go to Twitch"
+                prefixIcon="twitch"
+                suffixIcon="arrowUpRight"
+                size="s"
+                variant="secondary"
+              />
+            </Row>
+          </Column>
 
-          <Row fillWidth horizontal="end" paddingTop="8">
-            <Button
-              href="https://www.twitch.tv/asterionvt"
-              label="Go to Twitch"
-              prefixIcon="twitch"
-              suffixIcon="arrowUpRight"
-              size="s"
-              variant="secondary"
-            />
-          </Row>
-        </Column>
+          {/* YouTube Card */}
+          <Column
+            className="material-card"
+            background="page"
+            border="neutral-alpha-weak"
+            radius="l"
+            padding="24"
+            gap="16"
+            style={{ transition: "all 0.25s ease" }}
+          >
+            <Row vertical="center" gap="16" fillWidth>
+              <Avatar src={person.avatar} size="l" />
+              <Column gap="4" flex={1}>
+                <Text weight="strong" variant="heading-strong-m">
+                  YouTube Broadcast
+                </Text>
+                <Text variant="body-default-xs" onBackground="neutral-weak">
+                  @AsterionVT
+                </Text>
+              </Column>
+              {youtubeData.isLive ? (
+                <Badge background="danger-alpha-strong" onBackground="danger-strong" style={{ animation: "pulse 2s infinite" }}>
+                  LIVE
+                </Badge>
+              ) : (
+                <Badge background="neutral-alpha-weak" onBackground="neutral-weak">
+                  Offline
+                </Badge>
+              )}
+            </Row>
 
-        {/* YouTube Card */}
-        <Column
-          className="material-card"
-          background="page"
-          border="neutral-alpha-weak"
-          radius="l"
-          padding="24"
-          gap="16"
-          style={{ transition: "all 0.25s ease" }}
-        >
-          <Row vertical="center" gap="16" fillWidth>
-            <Avatar src={person.avatar} size="l" />
-            <Column gap="4" flex={1}>
-              <Text weight="strong" variant="heading-strong-m">
-                YouTube Broadcast
-              </Text>
-              <Text variant="body-default-xs" onBackground="neutral-weak">
-                @AsterionVT
-              </Text>
-            </Column>
-            {youtubeData.isLive ? (
-              <Badge background="danger-alpha-strong" onBackground="danger-strong" style={{ animation: "pulse 2s infinite" }}>
-                LIVE
-              </Badge>
-            ) : (
-              <Badge background="neutral-alpha-weak" onBackground="neutral-weak">
-                Offline
-              </Badge>
+            {youtubeData.isLive && (
+              <Column gap="8" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
+                <Text variant="body-default-s" weight="strong" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                  {youtubeData.liveTitle}
+                </Text>
+                <Text variant="body-default-xs" onBackground="neutral-weak">
+                  🔴 Live right now!
+                </Text>
+              </Column>
             )}
-          </Row>
 
-          {youtubeData.isLive && (
-            <Column gap="8" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
-              <Text variant="body-default-s" weight="strong" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                {youtubeData.liveTitle}
-              </Text>
-              <Text variant="body-default-xs" onBackground="neutral-weak">
-                🔴 Live right now!
-              </Text>
-            </Column>
-          )}
-
-          <Row fillWidth horizontal="end" paddingTop="8">
-            <Button
-              href="https://www.youtube.com/@AsterionVT"
-              label="Go to YouTube"
-              prefixIcon="youtube"
-              suffixIcon="arrowUpRight"
-              size="s"
-              variant="secondary"
-            />
-          </Row>
-        </Column>
-      </Grid>
+            <Row fillWidth horizontal="end" paddingTop="8">
+              <Button
+                href="https://www.youtube.com/@AsterionVT"
+                label="Go to YouTube"
+                prefixIcon="youtube"
+                suffixIcon="arrowUpRight"
+                size="s"
+                variant="secondary"
+              />
+            </Row>
+          </Column>
+        </Grid>
+      </ScrollReveal>
 
       <Line background="neutral-alpha-weak" fillWidth />
 
@@ -390,11 +394,11 @@ export default async function Content() {
             fillWidth
           >
             {youtubeData.videos.map((video: YouTubeMedia) => (
-              <SmartLink
-                key={video.id}
-                href={`https://www.youtube.com/watch?v=${video.id}`}
-                style={{ textDecoration: "none", width: "100%" }}
-              >
+              <ScrollReveal key={video.id} translateY="12" fillWidth>
+                <SmartLink
+                  href={`https://www.youtube.com/watch?v=${video.id}`}
+                  style={{ textDecoration: "none", width: "100%" }}
+                >
                   <Column
                     className="material-card"
                     radius="l"
@@ -437,6 +441,7 @@ export default async function Content() {
                     </Column>
                   </Column>
                 </SmartLink>
+              </ScrollReveal>
             ))}
           </Grid>
         ) : (
@@ -451,20 +456,22 @@ export default async function Content() {
       <Line background="neutral-alpha-weak" fillWidth />
 
       {/* Shorts Section */}
-      <Column fillWidth gap="16">
-        <Heading as="h2" variant="heading-strong-l" paddingLeft="8">
-          Latest Shorts
-        </Heading>
-        {youtubeData.shorts.length > 0 ? (
-          <ShortsCarousel shorts={youtubeData.shorts} />
-        ) : (
-          <Row padding="24" horizontal="center" border="neutral-alpha-weak" radius="m" background="page" fillWidth>
-            <Text variant="body-default-s" onBackground="neutral-weak">
-              No shorts found. Check back later!
-            </Text>
-          </Row>
-        )}
-      </Column>
+      <ScrollReveal translateY="12" fillWidth>
+        <Column fillWidth gap="16">
+          <Heading as="h2" variant="heading-strong-l" paddingLeft="8">
+            Latest Shorts
+          </Heading>
+          {youtubeData.shorts.length > 0 ? (
+            <ShortsCarousel shorts={youtubeData.shorts} />
+          ) : (
+            <Row padding="24" horizontal="center" border="neutral-alpha-weak" radius="m" background="page" fillWidth>
+              <Text variant="body-default-s" onBackground="neutral-weak">
+                No shorts found. Check back later!
+              </Text>
+            </Row>
+          )}
+        </Column>
+      </ScrollReveal>
     </Column>
   );
 }

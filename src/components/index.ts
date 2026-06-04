@@ -15,3 +15,4 @@ export { ShortsCarousel } from "@/components/ShortsCarousel";
 export { FeaturedBadge } from "@/components/FeaturedBadge";
 export { MarkContentSeen } from "@/components/MarkContentSeen";
 export { FloatingOrbs } from "@/components/FloatingOrbs";
+export { ScrollReveal } from "@/components/ScrollReveal";

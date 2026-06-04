@@ -172,3 +172,48 @@ export async function getLatestYouTubeVideoId(handle: string): Promise<string | 
     return null;
   }
 }
+
+export interface YouTubeLiveStatus {
+  isLive: boolean;
+  title?: string;
+  videoId?: string;
+}
+
+export async function getYouTubeLiveStatus(handle: string): Promise<YouTubeLiveStatus> {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) return { isLive: false };
+
+  try {
+    // Resolve channel ID (cache for 24 hours since it never changes)
+    const searchRes = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${handle}&key=${apiKey}`,
+      { next: { revalidate: 86400 } }
+    );
+    if (!searchRes.ok) return { isLive: false };
+    const searchData = await searchRes.json();
+    const channelId = searchData.items?.[0]?.snippet?.channelId;
+    if (!channelId) return { isLive: false };
+
+    // Search for active live stream (cache for 2 minutes to stay updated but avoid quota limits)
+    const liveRes = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&eventType=live&key=${apiKey}`,
+      { next: { revalidate: 120 } }
+    );
+    if (!liveRes.ok) {
+      console.error("YouTube Live Search API Error:", liveRes.status, await liveRes.text());
+      return { isLive: false };
+    }
+    const liveData = await liveRes.json();
+    if (liveData.items && liveData.items.length > 0) {
+      return {
+        isLive: true,
+        title: liveData.items[0].snippet.title,
+        videoId: liveData.items[0].id.videoId,
+      };
+    }
+  } catch (e) {
+    console.error("Error fetching YouTube live status:", e);
+  }
+  return { isLive: false };
+}
+

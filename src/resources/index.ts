@@ -9,6 +9,7 @@ export {
   blog,
   work,
   gallery,
+  homeLinks,
 } from "./content";
 
 export {

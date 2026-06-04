@@ -2,10 +2,12 @@
 
 .headerContainer {
     top: 0;
-    backdrop-filter: blur(0.5rem);
-    -webkit-backdrop-filter: blur(0.5rem);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     background: var(--neutral-alpha-weak);
     transition: all 0.2s ease;
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 .mobileOverlay {
@@ -16,8 +18,8 @@
     bottom: 0;
     padding-top: 5.5rem !important; /* Push menu content below sticky header */
     background: var(--page-background);
-    backdrop-filter: blur(1rem);
-    -webkit-backdrop-filter: blur(1rem);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     overflow-y: auto;
     z-index: 99;
     animation: slideDown 0.25s ease-out forwards;

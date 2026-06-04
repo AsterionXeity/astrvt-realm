@@ -65,7 +65,6 @@ export const Header = () => {
         zIndex={10}
         fillWidth
         horizontal="center"
-        borderBottom="neutral-alpha-weak"
         background="transparent"
       >
         <Row

@@ -195,18 +195,25 @@ const about: About = {
   },
   lore: {
     display: true, // set to false to hide this section
-    title: "Lore",
+    title: "Lore (WIP)",
     description: (
       <>
         Once a high elf star scholar, Asterion gazed too long into the abyss of the void, where whispers promised power beyond comprehension. The pact transformed them, their skin now carries the cosmos, horns grew as a mark of the demonic bond, and their eyes burn like twin embers. They wander between realms, collecting “soul dust”, which they channel through music, games, and stories.
-        <br/><br/>
-        Personality
-        <br/>
+      </>
+    ),
+  },
+  personality: {
+    display: true, // set to false to hide this section
+    title: "Personality",
+    description: (
+      <>
         Charismatic but mischievous  flirts with danger (and sometimes with chat).
+        <br/><br/>
         Switches between smooth, deep-toned voice acting and playful teasing.
+        <br/><br/>
         Occasionally Lewd/Flirty.
-        Chaotic good with dramatic monologue.
-
+        <br/><br/>
+        Chaotic Evil.
       </>
     ),
   },
@@ -346,6 +353,124 @@ const gallery: Gallery = {
   ],
 };
 
+export interface HomeLink {
+  name: string;
+  displayLink: string;
+  link: string;
+  icon: string;
+  color?: string;
+}
+
+const homeLinks: HomeLink[] = [
+  {
+    name: "GET MEDAL",
+    displayLink: "medal.tv/code/LYNK",
+    link: "https://medal.tv/code/LYNK",
+    icon: "medal",
+    color: "#ffb000",
+  },
+
+  {
+    name: "Vods",
+    displayLink: "youtube.com/@AsterionVTVODS",
+    link: "https://youtube.com/@AsterionVTVODS",
+    icon: "youtube",
+    color: "#ff0000",
+  },
+  {
+    name: "Producer YouTube",
+    displayLink: "youtube.com/@LynKProductions",
+    link: "https://youtube.com/@LynKProductions",
+    icon: "youtube",
+    color: "#ff0000",
+  },
+  {
+    name: "YouTube Music",
+    displayLink: "music.youtube.com/channel/UCj7PQ...",
+    link: "https://music.youtube.com/channel/UCj7PQT8KHeWrc1h563fjgaw",
+    icon: "music",
+    color: "#ff0000",
+  },
+  {
+    name: "Spotify",
+    displayLink: "open.spotify.com/artist/10wA5...",
+    link: "https://open.spotify.com/intl-ja/artist/10wA5dWejWfoslrtQ1pj8Y",
+    icon: "spotify",
+    color: "#1db954",
+  },
+  {
+    name: "Vsona/Vgen",
+    displayLink: "vsona.co/asterionvt",
+    link: "https://vsona.co/asterionvt",
+    icon: "link",
+    color: "#5865f2",
+  },
+  {
+    name: "VStream",
+    displayLink: "vstream.com/c/@AsterionVT",
+    link: "https://vstream.com/c/@AsterionVT",
+    icon: "link",
+    color: "#5865f2",
+  },
+  {
+    name: "Throne Gifting~",
+    displayLink: "throne.com/AsterionVT/wishlist",
+    link: "https://throne.com/AsterionVT/wishlist",
+    icon: "gift",
+    color: "#ff66cc",
+  },
+  {
+    name: "X",
+    displayLink: "x.com/AsterionVT",
+    link: "https://x.com/AsterionVT",
+    icon: "x",
+    color: "#ffffff",
+  },
+  {
+    name: "Bluesky",
+    displayLink: "bsky.app/profile/asterionvt.kawaii.social",
+    link: "https://bsky.app/profile/asterionvt.kawaii.social",
+    icon: "bluesky",
+    color: "#3b82f6",
+  },
+
+  {
+    name: "Donate/Tip",
+    displayLink: "streamelements.com/AsterionVT/tip",
+    link: "https://streamelements.com/AsterionVT/tip",
+    icon: "dollar",
+    color: "#00c8ff",
+  },
+  {
+    name: "AsterionVT OSU! Profile",
+    displayLink: "osu.ppy.sh/users/14679254",
+    link: "https://osu.ppy.sh/users/14679254",
+    icon: "gamepad",
+    color: "#ff66aa",
+  },
+  {
+    name: "Steam",
+    displayLink: "steamcommunity.com/id/AsterionVT",
+    link: "https://steamcommunity.com/id/AsterionVT",
+    icon: "steam",
+    color: "#66c0f4",
+  },
+  {
+    name: "AniList",
+    displayLink: "anilist.co/user/AsterionVT/",
+    link: "https://anilist.co/user/AsterionVT/",
+    icon: "link",
+    color: "#3db4f2",
+  },
+  {
+    name: "Vtubers.me",
+    displayLink: "vtubers.me/AsterionVT",
+    link: "https://vtubers.me/AsterionVT",
+    icon: "link",
+    color: "#9146ff",
+  },
+];
+
 export {
   person,
   social,
@@ -356,4 +481,5 @@ export {
   blog,
   work,
   gallery,
+  homeLinks,
 };

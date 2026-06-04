@@ -45,6 +45,11 @@ export default function About() {
       items: [],
     },
     {
+      title: about.personality.title,
+      display: about.personality.display,
+      items: [],
+    },
+    {
       title: about.technical.title,
       display: about.technical.display,
       items: about.technical.skills.map((skill) => skill.title),
@@ -129,7 +134,7 @@ export default function About() {
                 vertical="center"
                 className={styles.blockAlign}
                 style={{
-                  backdropFilter: "blur(var(--static-space-1))",
+                  backdropFilter: "blur(20px)",
                 }}
               >
                 <Icon paddingLeft="12" name="calendar" onBackground="brand-weak" />
@@ -197,8 +202,10 @@ export default function About() {
           </Column>
 
           {about.intro.display && (
-            <Column textVariant="body-default-l" fillWidth gap="m" marginBottom="xl">
-              {about.intro.description}
+            <Column fillWidth gap="m" marginBottom="xl">
+              <Text variant="body-default-m" onBackground="neutral-weak">
+                {about.intro.description}
+              </Text>
             </Column>
           )}
 
@@ -269,6 +276,19 @@ export default function About() {
               <Column fillWidth gap="l" marginBottom="40">
                 <Text variant="body-default-m" onBackground="neutral-weak">
                   {about.lore.description}
+                </Text>
+              </Column>
+            </>
+          )}
+
+          {about.personality.display && (
+            <>
+              <Heading as="h2" id={about.personality.title} variant="display-strong-s" marginBottom="m">
+                {about.personality.title}
+              </Heading>
+              <Column fillWidth gap="l" marginBottom="40">
+                <Text variant="body-default-m" onBackground="neutral-weak">
+                  {about.personality.description}
                 </Text>
               </Column>
             </>
