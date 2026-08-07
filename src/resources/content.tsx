@@ -100,7 +100,7 @@ const home: Home = {
   image: "/images/gallery/Asterionvt - EYE BANNER.jpg",
   label: "Home",
   title: `${person.name}'s Portfolio`,
-  description: `Portfolio website showcasing my work as a ${person.role}`,
+  description: "Asterion Nightcallers VTuber Profile",
   headline: <>AsterionVT</>,
   featured: {
     display: true,
