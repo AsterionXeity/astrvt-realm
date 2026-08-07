@@ -382,8 +382,8 @@ const homeLinks: HomeLink[] = [
   },
   {
     name: "Producer YouTube",
-    displayLink: "youtube.com/@LynKProductions",
-    link: "https://youtube.com/@LynKProductions",
+    displayLink: "youtube.com/@ProdAsterVT",
+    link: "https://youtube.com/@ProdAsterVT",
     icon: "youtube",
     color: "#ff0000",
   },
