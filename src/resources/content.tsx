@@ -423,6 +423,13 @@ const homeLinks: HomeLink[] = [
     color: "#ff66cc",
   },
   {
+    name: "Discord",
+    displayLink: "discord.gg/Jz5tMhx57Z",
+    link: "https://discord.gg/Jz5tMhx57Z",
+    icon: "discord",
+    color: "#5865f2",
+  },
+  {
     name: "X",
     displayLink: "x.com/AsterionVT",
     link: "https://x.com/AsterionVT",
