@@ -197,7 +197,7 @@ const schema: SchemaConfig = {
 const sameAs: SameAsConfig = {
   threads: "https://bsky.app/profile/asterionvt.kawaii.social",
   linkedin: "",
-  discord: "",
+  discord: "https://discord.gg/jWptUJmEaB",
 };
 
 // social sharing configuration for blog posts

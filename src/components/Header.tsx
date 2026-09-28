@@ -52,7 +52,7 @@ export const Header = () => {
   }, [pathname]);
 
   const githubLink = social.find((item) => item.name === "GitHub")?.link;
-  const discordLink = "https://discord.gg/zexADsHXJN";
+  const discordLink = "https://discord.gg/jWptUJmEaB";
 
   return (
     <>
