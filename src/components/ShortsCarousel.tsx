@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Column, Row, Text, IconButton, Media, SmartLink, Grid } from "@once-ui-system/core";
+import Image from "next/image";
+import { Column, Row, Text, IconButton, SmartLink, Grid } from "@once-ui-system/core";
 import styles from "./ShortsCarousel.module.scss";
 
 interface YouTubeMedia {
@@ -47,35 +48,32 @@ export const ShortsCarousel = ({ shorts }: ShortsCarouselProps) => {
             <SmartLink
               key={short.id}
               href={`https://www.youtube.com/shorts/${short.id}`}
-              style={{ textDecoration: "none", width: "100%" }}
+              className={styles.cardLink}
             >
-              <Column className="material-card" radius="l" overflow="hidden" fillWidth>
-                <Media src={short.thumbnail} alt={short.title} aspectRatio="9/16" fillWidth />
-                <Column padding="16" gap="12" fillWidth>
-                  <Text
-                    variant="body-default-m"
-                    weight="strong"
-                    onBackground="neutral-strong"
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      minHeight: "2.8rem",
-                    }}
-                  >
+              <div className={styles.shortCard}>
+                <div className={styles.thumbnailWrapper}>
+                  <Image
+                    src={short.thumbnail || "/images/og/home.jpg"}
+                    alt={short.title}
+                    fill
+                    sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                    className={styles.thumbnailImage}
+                  />
+                </div>
+                <div className={styles.cardContent}>
+                  <p className={styles.shortTitle}>
                     {short.title}
-                  </Text>
+                  </p>
                   <Row fillWidth horizontal="between" vertical="center" paddingTop="8">
-                    <span style={{ pointerEvents: "none", fontSize: "var(--font-size-body-s)", color: "var(--neutral-on-background-weak)", background: "var(--neutral-alpha-weak)", padding: "4px 8px", borderRadius: "4px" }}>
+                    <span className={styles.watchTag}>
                       Watch
                     </span>
                     <Text variant="body-default-xs" onBackground="neutral-weak">
                       {new Date(short.publishedAt).toLocaleDateString()}
                     </Text>
                   </Row>
-                </Column>
-              </Column>
+                </div>
+              </div>
             </SmartLink>
           ))}
         </Grid>
@@ -88,69 +86,65 @@ export const ShortsCarousel = ({ shorts }: ShortsCarouselProps) => {
             {/* First Short */}
             <SmartLink
               href={`https://www.youtube.com/shorts/${firstShort.id}`}
-              style={{ textDecoration: "none", flex: 1, minWidth: "0" }}
+              className={styles.cardLink}
+              style={{ flex: 1, minWidth: "0" }}
             >
-              <Column className="material-card" radius="l" overflow="hidden" fillWidth>
-                <Media src={firstShort.thumbnail} alt={firstShort.title} aspectRatio="9/16" fillWidth />
-                <Column padding="12" gap="8" fillWidth>
-                  <Text
-                    variant="body-default-s"
-                    weight="strong"
-                    onBackground="neutral-strong"
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      minHeight: "2.4rem",
-                    }}
-                  >
+              <div className={styles.shortCard}>
+                <div className={styles.thumbnailWrapper}>
+                  <Image
+                    src={firstShort.thumbnail || "/images/og/home.jpg"}
+                    alt={firstShort.title}
+                    fill
+                    sizes="50vw"
+                    className={styles.thumbnailImage}
+                  />
+                </div>
+                <div className={styles.cardContentMobile}>
+                  <p className={styles.shortTitleMobile}>
                     {firstShort.title}
-                  </Text>
+                  </p>
                   <Row fillWidth horizontal="between" vertical="center" paddingTop="4">
-                    <span style={{ pointerEvents: "none", fontSize: "var(--font-size-body-xs)", color: "var(--neutral-on-background-weak)", background: "var(--neutral-alpha-weak)", padding: "2px 6px", borderRadius: "4px" }}>
+                    <span className={styles.watchTagMobile}>
                       Watch
                     </span>
                     <Text variant="body-default-xs" onBackground="neutral-weak">
                       {new Date(firstShort.publishedAt).toLocaleDateString()}
                     </Text>
                   </Row>
-                </Column>
-              </Column>
+                </div>
+              </div>
             </SmartLink>
 
             {/* Second Short */}
             <SmartLink
               href={`https://www.youtube.com/shorts/${secondShort.id}`}
-              style={{ textDecoration: "none", flex: 1, minWidth: "0" }}
+              className={styles.cardLink}
+              style={{ flex: 1, minWidth: "0" }}
             >
-              <Column className="material-card" radius="l" overflow="hidden" fillWidth>
-                <Media src={secondShort.thumbnail} alt={secondShort.title} aspectRatio="9/16" fillWidth />
-                <Column padding="12" gap="8" fillWidth>
-                  <Text
-                    variant="body-default-s"
-                    weight="strong"
-                    onBackground="neutral-strong"
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      minHeight: "2.4rem",
-                    }}
-                  >
+              <div className={styles.shortCard}>
+                <div className={styles.thumbnailWrapper}>
+                  <Image
+                    src={secondShort.thumbnail || "/images/og/home.jpg"}
+                    alt={secondShort.title}
+                    fill
+                    sizes="50vw"
+                    className={styles.thumbnailImage}
+                  />
+                </div>
+                <div className={styles.cardContentMobile}>
+                  <p className={styles.shortTitleMobile}>
                     {secondShort.title}
-                  </Text>
+                  </p>
                   <Row fillWidth horizontal="between" vertical="center" paddingTop="4">
-                    <span style={{ pointerEvents: "none", fontSize: "var(--font-size-body-xs)", color: "var(--neutral-on-background-weak)", background: "var(--neutral-alpha-weak)", padding: "2px 6px", borderRadius: "4px" }}>
+                    <span className={styles.watchTagMobile}>
                       Watch
                     </span>
                     <Text variant="body-default-xs" onBackground="neutral-weak">
                       {new Date(secondShort.publishedAt).toLocaleDateString()}
                     </Text>
                   </Row>
-                </Column>
-              </Column>
+                </div>
+              </div>
             </SmartLink>
           </Row>
 

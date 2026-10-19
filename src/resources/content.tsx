@@ -17,7 +17,7 @@ const person: Person = {
   lastName: "Nightcaller",
   name: "Asterion Nightcaller",
   role: "VTuber / Producer / Software Dev / Engineer",
-  avatar: "/images/new-avatar.PNG",
+  avatar: "/images/gallery/asterion-portrait-smile.png",
   email: "[lynkazoyuu@gmail.com]",
   location: "Europe/Amsterdam", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["English", "Japanese"], // optional: Leave the array empty if you don't want to display languages

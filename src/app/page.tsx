@@ -138,7 +138,7 @@ export default async function Home() {
                     <Avatar
                       marginRight="8"
                       style={{ marginLeft: "-0.75rem" }}
-                      src={person.avatar}
+                      src={about.avatar.image || person.avatar}
                       size="m"
                     />
                   )}
