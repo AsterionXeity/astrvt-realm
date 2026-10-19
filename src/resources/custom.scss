@@ -313,5 +313,67 @@ img, video, [data-media], .material-card {
   flex-shrink: 0;
 }
 
+/* ==========================================================================
+   Gallery Items & NEW Artwork Overlay
+   ========================================================================== */
 
+.gallery-card-wrapper {
+  position: relative;
+  width: 100%;
+  display: block;
+  border-radius: var(--radius-m, 12px);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
+  &:hover {
+    transform: translateY(-6px);
+  }
+
+  // Prevent conflicting double-translation on inner card
+  .material-card:not(.cursor-zoom-out):hover {
+    transform: none !important;
+  }
+}
+
+.gallery-new-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.88) 0%, rgba(99, 102, 241, 0.88) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.5), 0 0 18px rgba(168, 85, 247, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: cosmic-badge-pulse 2.8s infinite ease-in-out;
+
+  .gallery-new-sparkle {
+    font-size: 0.8rem;
+    color: var(--custom-gold, #fcc46f);
+    filter: drop-shadow(0 0 4px rgba(252, 196, 111, 0.8));
+    line-height: 1;
+  }
+}
+
+@keyframes cosmic-badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.5), 0 0 18px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 4px 18px rgba(124, 58, 237, 0.7), 0 0 24px rgba(168, 85, 247, 0.5);
+  }
+}

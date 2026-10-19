@@ -82,12 +82,6 @@ const social: Social = [
     essential: true,
   },
   {
-    name: "Social Link",
-    icon: "link",
-    link: "https://solo.to/asterionvt",
-    essential: true,
-  },
-  {
     name: "Email",
     icon: "email",
     link: `mailto:${person.email}`,
@@ -124,7 +118,7 @@ const home: Home = {
 
 const about: About = {
   path: "/about",
-  image: "/images/gallery/asterion.png",
+  image: "/images/gallery/asterion-portrait-smile.png",
   label: "About",
   title: `About – ${person.name}`,
   description: `Meet ${person.name}, ${person.role} from ${person.location}`,
@@ -134,6 +128,7 @@ const about: About = {
   },
   avatar: {
     display: true,
+    image: "/images/gallery/asterion-portrait-smile.png",
   },
   calendar: {
     display: false,
@@ -301,13 +296,45 @@ const work: Work = {
 
 const gallery: Gallery = {
   path: "/gallery",
-  image: "/images/gallery/Ref_Sheet.png",
+  image: "/images/gallery/asterion-portrait-smile.png",
   label: "Gallery",
   title: `Art gallery – ${person.name}`,
   description: `Commissioned works of ${person.name}`,
-  // Images by https://lorant.one
-  // These are placeholder images, replace with your own
+  // Images are automatically sorted based on the file's actual creation/modified date on disk!
+  // Artworks created on disk within the last 30 days automatically display a glowing 'NEW' overlay!
   images: [
+    {
+      src: "/images/gallery/asterion-astral-blade.jpg",
+      alt: "Asterion Astral Blade - Night Realm",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/asterion-blade-render.png",
+      alt: "Asterion Astral Blade Stance",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/asterion-portrait-smile.png",
+      alt: "Asterion Cosmic Smile Portrait",
+      orientation: "vertical",
+    },
+
+    /* =========================================================================
+       ADD YOUR GIFS HERE:
+       1. Place your .gif files into the folder: public/images/gallery/
+       2. Add their entry here (the file creation date on disk is detected automatically):
+          {
+            src: "/images/gallery/your-animation-1.gif",
+            alt: "Asterion Animated Emote / Scene 1",
+            orientation: "horizontal", // or "vertical"
+          },
+          {
+            src: "/images/gallery/your-animation-2.gif",
+            alt: "Asterion Animated Emote / Scene 2",
+            orientation: "vertical",
+          },
+       ========================================================================= */
+
     {
       src: "/images/gallery/Ref_Sheet.png",
       alt: "Character Reference Sheet",

@@ -130,6 +130,8 @@ export interface About extends BasePageConfig {
   avatar: {
     /** Whether to display the avatar */
     display: boolean;
+    /** Custom avatar image path for the about page */
+    image?: string;
   };
   /** Calendar section configuration */
   calendar: {
@@ -237,17 +239,28 @@ export interface Blog extends BasePageConfig {}
 export interface Work extends BasePageConfig {}
 
 /**
+ * Individual image entry in the art gallery.
+ */
+export interface GalleryImage {
+  /** Image source path */
+  src: string;
+  /** Image alt text */
+  alt: string;
+  /** Image orientation (horizontal/vertical) */
+  orientation: string;
+  /** Creation date of the artwork (YYYY-MM-DD or ISO string) for sorting and new badge */
+  createdAt?: string;
+  /** Optional manual override to display or hide the NEW badge */
+  isNew?: boolean;
+  /** Optional flag to disable image optimization (recommended for animated GIFs) */
+  unoptimized?: boolean;
+}
+
+/**
  * Gallery page configuration.
  * @description Configuration for the Gallery page, including metadata, navigation label, and image list.
  */
 export interface Gallery extends BasePageConfig {
   /** List of images in the gallery */
-  images: Array<{
-    /** Image source path */
-    src: string;
-    /** Image alt text */
-    alt: string;
-    /** Image orientation (horizontal/vertical) */
-    orientation: string;
-  }>;
+  images: Array<GalleryImage>;
 }
