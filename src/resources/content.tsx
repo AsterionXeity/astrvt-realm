@@ -319,21 +319,41 @@ const gallery: Gallery = {
       orientation: "vertical",
     },
 
-    /* =========================================================================
-       ADD YOUR GIFS HERE:
-       1. Place your .gif files into the folder: public/images/gallery/
-       2. Add their entry here (the file creation date on disk is detected automatically):
-          {
-            src: "/images/gallery/your-animation-1.gif",
-            alt: "Asterion Animated Emote / Scene 1",
-            orientation: "horizontal", // or "vertical"
-          },
-          {
-            src: "/images/gallery/your-animation-2.gif",
-            alt: "Asterion Animated Emote / Scene 2",
-            orientation: "vertical",
-          },
-       ========================================================================= */
+    {
+      src: "/images/gallery/1788356736368~2.jpg",
+      alt: "Asterion Cosmic Sovereign - Astral Cloak Render",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/Gemini_Generated_Image_ipmaj9ipmaj9ipma.jfif",
+      alt: "Asterion Celestial Stare - Cosmic Starlit Illustration",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/YCH Shikanokotantan AsterionVT.gif",
+      alt: "Asterion Shikanoko Dance Chibi Animation",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/talking (106).gif",
+      alt: "Asterion Animated Talking Model",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/image.png",
+      alt: "Dynamic Battle Stance Sketch",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/17834552933151821385665346332784.jpg",
+      alt: "Asterion Voidcaller - Dynamis Halicarnass Sticky Note Sketch",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/Lyn.png",
+      alt: "Asterion Padoru Holiday Chibi",
+      orientation: "vertical",
+    },
 
     {
       src: "/images/gallery/Ref_Sheet.png",
@@ -378,6 +398,11 @@ const gallery: Gallery = {
     {
       src: "/images/gallery/vgenemote.png",
       alt: "VGen Emote",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/Fm8oRljX0AEIxbz.jpeg",
+      alt: "Asterion Cosmic Horns Bust Illustration by MBR",
       orientation: "vertical",
     },
   ],

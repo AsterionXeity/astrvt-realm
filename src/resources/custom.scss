@@ -322,15 +322,64 @@ img, video, [data-media], .material-card {
   width: 100%;
   display: block;
   border-radius: var(--radius-m, 12px);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &:hover {
-    transform: translateY(-6px);
+  // When enlarged, elevate card wrapper to maximum z-index
+  &:has(.cursor-zoom-out),
+  &.is-enlarged {
+    z-index: 99999 !important;
+    position: relative !important;
   }
 
-  // Prevent conflicting double-translation on inner card
-  .material-card:not(.cursor-zoom-out):hover {
-    transform: none !important;
+  // Hover effect: badge moves with the card smoothly when not enlarged
+  &:hover:not(:has(.cursor-zoom-out)):not(.is-enlarged) {
+    .gallery-new-badge {
+      transform: translateY(-6px);
+    }
+  }
+}
+
+// Elevate the parent MasonryGrid column of the enlarged image so it paints above all sibling columns and items
+.is-enlarged-column,
+div:has(> .gallery-card-wrapper.is-enlarged),
+div:has(> .gallery-card-wrapper:has(.cursor-zoom-out)) {
+  z-index: 99999 !important;
+  position: relative !important;
+}
+
+// When ANY image is enlarged on the page:
+// 1. Lock scrolling on both html and body so the view does not drift or clip
+// 2. Hide ALL badges across the gallery so none can ever overlap the enlarged artwork
+// 3. Lower header below the enlarged media overlay
+// 4. Disable pointer events and hover lifts on all other cards
+html.gallery-zoom-active,
+body.gallery-zoom-active,
+html:has(.cursor-zoom-out),
+body:has(.cursor-zoom-out) {
+  overflow: hidden !important;
+
+  // Lower header below the enlarged media overlay (z-index 9/10)
+  header,
+  [as="header"] {
+    z-index: 5 !important;
+  }
+
+  // Completely hide ALL NEW badges across the page during zoom
+  .gallery-new-badge {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  // Disable pointer events and hover lifts on all non-enlarged cards
+  .gallery-card-wrapper:not(.is-enlarged):not(:has(.cursor-zoom-out)) {
+    pointer-events: none !important;
+    z-index: 0 !important;
+
+    * {
+      pointer-events: none !important;
+      transform: none !important;
+    }
   }
 }
 
@@ -357,6 +406,7 @@ img, video, [data-media], .material-card {
   box-shadow: 0 4px 14px rgba(124, 58, 237, 0.5), 0 0 18px rgba(168, 85, 247, 0.3);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   animation: cosmic-badge-pulse 2.8s infinite ease-in-out;
 
   .gallery-new-sparkle {

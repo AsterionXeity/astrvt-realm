@@ -29,6 +29,9 @@ export async function generateMetadata() {
   });
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 60; // Cache for 60 seconds
+
 export default async function Home() {
   const [twitchStatus, youtubeLiveStatus, latestVideoId] = await Promise.all([
     getTwitchLiveStatus("asterionvt"),

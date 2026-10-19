@@ -91,7 +91,7 @@ async function getYouTubeContentAndLive(handle: string, apiKey: string): Promise
     try {
       const liveRes = await fetch(
         `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&eventType=live&key=${apiKey}`,
-        { cache: "no-store" }
+        { next: { revalidate: 60 } }
       );
       if (liveRes.ok) {
         const liveData = await liveRes.json();
@@ -117,7 +117,7 @@ async function getYouTubeContentAndLive(handle: string, apiKey: string): Promise
     // 4. Fetch Latest 30 uploads
     const playlistRes = await fetch(
       `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=30&key=${apiKey}`,
-      { cache: "no-store" }
+      { next: { revalidate: 300 } }
     );
     if (!playlistRes.ok) throw new Error("YouTube PlaylistItems Failed");
     const playlistData = await playlistRes.json();
@@ -132,7 +132,7 @@ async function getYouTubeContentAndLive(handle: string, apiKey: string): Promise
     if (videoIds.length > 0) {
       const videosRes = await fetch(
         `https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${apiKey}`,
-        { cache: "no-store" }
+        { next: { revalidate: 300 } }
       );
       if (videosRes.ok) {
         const videosData = await videosRes.json();

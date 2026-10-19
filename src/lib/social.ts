@@ -10,7 +10,7 @@ export async function getYouTubeSubs(link: string): Promise<string | null> {
   const handle = handleMatch[1];
   
   try {
-    const statsRes = await fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=statistics&forHandle=@${handle}&key=${apiKey}`, { cache: 'no-store' });
+    const statsRes = await fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=statistics&forHandle=@${handle}&key=${apiKey}`, { next: { revalidate: 300 } });
     if (!statsRes.ok) {
       console.error("YouTube Stats API Error:", statsRes.status, await statsRes.text());
       return null;
@@ -42,7 +42,7 @@ export async function getTwitchFollowers(link: string): Promise<string | null> {
   const login = loginMatch[1];
 
   try {
-    const tokenRes = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`, { method: "POST", cache: 'no-store' });
+    const tokenRes = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`, { method: "POST", next: { revalidate: 3600 } });
     if (!tokenRes.ok) {
       console.error("Twitch Token API Error:", tokenRes.status, await tokenRes.text());
       return null;
@@ -55,7 +55,7 @@ export async function getTwitchFollowers(link: string): Promise<string | null> {
         "Client-Id": clientId,
         "Authorization": `Bearer ${token}`
       },
-      cache: 'no-store'
+      next: { revalidate: 86400 }
     });
     if (!userRes.ok) {
       console.error("Twitch User API Error:", userRes.status, await userRes.text());
@@ -70,7 +70,7 @@ export async function getTwitchFollowers(link: string): Promise<string | null> {
         "Client-Id": clientId,
         "Authorization": `Bearer ${token}`
       },
-      cache: 'no-store'
+      next: { revalidate: 300 }
     });
     if (!followRes.ok) {
       console.error("Twitch Followers API Error:", followRes.status, await followRes.text());
@@ -111,7 +111,7 @@ export async function getTwitchLiveStatus(login: string): Promise<TwitchStatus> 
           client_secret: clientSecret,
           grant_type: "client_credentials",
         }),
-        cache: "no-store",
+        next: { revalidate: 3600 },
       }
     );
     if (!tokenRes.ok) return { isLive: false };
@@ -125,7 +125,7 @@ export async function getTwitchLiveStatus(login: string): Promise<TwitchStatus> 
           "Client-Id": clientId,
           Authorization: `Bearer ${token}`,
         },
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
     if (!streamRes.ok) return { isLive: false };
