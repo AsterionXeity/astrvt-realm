@@ -434,9 +434,9 @@ const homeLinks: HomeLink[] = [
   },
 
   {
-    name: "Vods",
-    displayLink: "youtube.com/@AsterionVTVODS",
-    link: "https://youtube.com/@AsterionVTVODS",
+    name: "Main Channel",
+    displayLink: "youtube.com/@AsterionVT",
+    link: "https://youtube.com/@AsterionVT",
     icon: "youtube",
     color: "#ff0000",
   },
@@ -460,27 +460,6 @@ const homeLinks: HomeLink[] = [
     link: "https://open.spotify.com/intl-ja/artist/10wA5dWejWfoslrtQ1pj8Y",
     icon: "spotify",
     color: "#1db954",
-  },
-  {
-    name: "Vsona/Vgen",
-    displayLink: "vsona.co/asterionvt",
-    link: "https://vsona.co/asterionvt",
-    icon: "link",
-    color: "#5865f2",
-  },
-  {
-    name: "VStream",
-    displayLink: "vstream.com/c/@AsterionVT",
-    link: "https://vstream.com/c/@AsterionVT",
-    icon: "link",
-    color: "#5865f2",
-  },
-  {
-    name: "Throne Gifting~",
-    displayLink: "throne.com/AsterionVT/wishlist",
-    link: "https://throne.com/AsterionVT/wishlist",
-    icon: "gift",
-    color: "#ff66cc",
   },
   {
     name: "Discord",
@@ -512,7 +491,28 @@ const homeLinks: HomeLink[] = [
     color: "#00c8ff",
   },
   {
-    name: "AsterionVT OSU! Profile",
+    name: "Vsona/Vgen",
+    displayLink: "vsona.co/asterionvt",
+    link: "https://vsona.co/asterionvt",
+    icon: "link",
+    color: "#5865f2",
+  },
+  {
+    name: "VStream",
+    displayLink: "vstream.com/c/@AsterionVT",
+    link: "https://vstream.com/c/@AsterionVT",
+    icon: "link",
+    color: "#5865f2",
+  },
+  {
+    name: "Throne Gifting~",
+    displayLink: "throne.com/AsterionVT/wishlist",
+    link: "https://throne.com/AsterionVT/wishlist",
+    icon: "gift",
+    color: "#ff66cc",
+  },
+  {
+    name: "OSU! Profile",
     displayLink: "osu.ppy.sh/users/14679254",
     link: "https://osu.ppy.sh/users/14679254",
     icon: "gamepad",
@@ -531,13 +531,6 @@ const homeLinks: HomeLink[] = [
     link: "https://anilist.co/user/AsterionVT/",
     icon: "link",
     color: "#3db4f2",
-  },
-  {
-    name: "Vtubers.me",
-    displayLink: "vtubers.me/AsterionVT",
-    link: "https://vtubers.me/AsterionVT",
-    icon: "link",
-    color: "#9146ff",
   },
 ];
 
