@@ -28,13 +28,21 @@ function getFileTimestamp(src: string): string | undefined {
 }
 
 export async function generateMetadata() {
-  return Meta.generate({
+  const meta = Meta.generate({
     title: gallery.title,
     description: gallery.description,
     baseURL: baseURL,
-    image: gallery.image || home.image,
+    image: `/api/og/generate?title=${encodeURIComponent(gallery.title)}`,
     path: gallery.path,
   });
+
+  return {
+    ...meta,
+    openGraph: {
+      ...meta.openGraph,
+      siteName: `${person.name} Realm`,
+    },
+  };
 }
 
 export default function Gallery() {

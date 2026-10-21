@@ -20,13 +20,52 @@ import { Analytics } from "@vercel/analytics/next"
 import { getTwitchLiveStatus, getLatestYouTubeVideoId, getYouTubeLiveStatus } from "@/lib/social";
 
 export async function generateMetadata() {
-  return Meta.generate({
-    title: home.title,
-    description: home.description,
+  const [twitchStatus, youtubeLiveStatus] = await Promise.all([
+    getTwitchLiveStatus("asterionvt").catch(() => ({ isLive: false, title: undefined as string | undefined })),
+    getYouTubeLiveStatus("AsterionVT").catch(() => ({ isLive: false, title: undefined as string | undefined })),
+  ]);
+
+  const isLive = Boolean(twitchStatus?.isLive || youtubeLiveStatus?.isLive);
+  const livePlatform = twitchStatus?.isLive ? "Twitch" : youtubeLiveStatus?.isLive ? "YouTube" : null;
+  const liveTitle = twitchStatus?.isLive
+    ? twitchStatus.title
+    : youtubeLiveStatus?.isLive
+      ? youtubeLiveStatus.title
+      : null;
+
+  const dynamicTitle = isLive
+    ? `🔴 LIVE NOW: ${person.name} | ${livePlatform}`
+    : `${person.name} | VTuber Realm & Socials`;
+
+  const dynamicDescription = isLive
+    ? `🔴 ${person.name} is streaming LIVE on ${livePlatform}${liveTitle ? `: "${liveTitle}"` : ""}! Click to tune in and enter the Realm.`
+    : `${person.name}'s official VTuber Realm. Astral elf wanderer from the cosmos — watch live streams, find socials, music, art gallery, and community.`;
+
+  const ogParams = new URLSearchParams();
+  ogParams.set("title", dynamicTitle);
+  if (isLive) {
+    ogParams.set("live", "true");
+    if (livePlatform) ogParams.set("platform", livePlatform);
+    if (liveTitle) ogParams.set("streamTitle", liveTitle);
+  }
+
+  const ogImageUrl = `/api/og/generate?${ogParams.toString()}`;
+
+  const meta = Meta.generate({
+    title: dynamicTitle,
+    description: dynamicDescription,
     baseURL: baseURL,
     path: home.path,
-    image: home.image,
+    image: ogImageUrl,
   });
+
+  return {
+    ...meta,
+    openGraph: {
+      ...meta.openGraph,
+      siteName: `${person.name} Realm`,
+    },
+  };
 }
 
 export const dynamic = "force-dynamic";

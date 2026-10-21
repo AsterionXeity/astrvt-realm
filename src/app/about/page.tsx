@@ -18,13 +18,21 @@ import styles from "@/components/about/about.module.scss";
 import React from "react";
 
 export async function generateMetadata() {
-  return Meta.generate({
+  const meta = Meta.generate({
     title: about.title,
     description: about.description,
     baseURL: baseURL,
-    image: about.image || home.image,
+    image: `/api/og/generate?title=${encodeURIComponent(about.title)}`,
     path: about.path,
   });
+
+  return {
+    ...meta,
+    openGraph: {
+      ...meta.openGraph,
+      siteName: `${person.name} Realm`,
+    },
+  };
 }
 
 export default function About() {
@@ -47,7 +55,7 @@ export default function About() {
     {
       title: about.personality.title,
       display: about.personality.display,
-      items: [],
+      items: about.personality.sections.map((section) => section.title),
     },
     {
       title: about.technical.title,
@@ -287,9 +295,36 @@ export default function About() {
                 {about.personality.title}
               </Heading>
               <Column fillWidth gap="l" marginBottom="40">
-                <Text variant="body-default-m" onBackground="neutral-weak">
-                  {about.personality.description}
-                </Text>
+                {about.personality.description && (
+                  <Text variant="body-default-m" onBackground="neutral-weak">
+                    {about.personality.description}
+                  </Text>
+                )}
+                {about.personality.sections.map((section) => (
+                  <Column key={section.title} fillWidth gap="12">
+                    <Text id={section.title} variant="heading-strong-l" onBackground="brand-weak">
+                      ✦ {section.title}
+                    </Text>
+                    <Column as="ul" gap="8" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                      {section.items.map((item, itemIndex) => (
+                        <Text
+                          as="li"
+                          key={`${section.title}-${itemIndex}`}
+                          variant="body-default-m"
+                          onBackground="neutral-weak"
+                        >
+                          <span style={{ opacity: 0.6, marginRight: "0.5rem" }}>✧</span>
+                          {item.label && (
+                            <Text as="span" onBackground="neutral-strong" weight="strong">
+                              {item.label}:{" "}
+                            </Text>
+                          )}
+                          {item.value}
+                        </Text>
+                      ))}
+                    </Column>
+                  </Column>
+                ))}
               </Column>
             </>
           )}

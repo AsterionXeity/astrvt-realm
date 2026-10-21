@@ -38,10 +38,10 @@ export const ShortsCarousel = ({ shorts }: ShortsCarouselProps) => {
       {/* Desktop Grid Layout: Visible on desktop, hidden on mobile */}
       <div className={styles.desktopGrid}>
         <Grid
-          columns="5"
-          m={{ columns: "4" }}
-          s={{ columns: "3" }}
-          gap="16"
+          columns="4"
+          m={{ columns: "3" }}
+          s={{ columns: "2" }}
+          gap="8"
           fillWidth
         >
           {shorts.map((short) => (
@@ -56,7 +56,7 @@ export const ShortsCarousel = ({ shorts }: ShortsCarouselProps) => {
                     src={short.thumbnail || "/images/og/home.jpg"}
                     alt={short.title}
                     fill
-                    sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className={styles.thumbnailImage}
                   />
                 </div>

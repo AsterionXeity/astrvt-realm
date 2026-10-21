@@ -13,17 +13,30 @@ import {
   RevealFx,
   type SpacingToken,
 } from "@once-ui-system/core";
+import type { Viewport } from "next";
 import { Footer, Header, RouteGuard, Providers, FloatingOrbs } from "@/components";
-import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
+import { baseURL, effects, fonts, style, dataStyle, home, person } from "@/resources";
+
+export const viewport: Viewport = {
+  themeColor: "#8b5cf6",
+};
 
 export async function generateMetadata() {
-  return Meta.generate({
+  const meta = Meta.generate({
     title: home.title,
     description: home.description,
     baseURL: baseURL,
     path: home.path,
-    image: home.image,
+    image: "/api/og/generate",
   });
+
+  return {
+    ...meta,
+    openGraph: {
+      ...meta.openGraph,
+      siteName: `${person.name} Realm`,
+    },
+  };
 }
 
 export default async function RootLayout({
@@ -45,6 +58,8 @@ export default async function RootLayout({
       )}
     >
       <head>
+        <meta name="theme-color" content="#8b5cf6" />
+        <meta name="darkreader-lock" />
         <script
           id="theme-init"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>

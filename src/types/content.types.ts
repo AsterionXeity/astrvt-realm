@@ -191,8 +191,20 @@ export interface About extends BasePageConfig {
     display: boolean;
     /** Title for the personality section */
     title: string;
-    /** Text content of the section */
-    description: React.ReactNode;
+    /** Optional intro text for the section */
+    description?: React.ReactNode;
+    /** Separate sub-sections, each with its own title and list of items */
+    sections: Array<{
+      /** Sub-section title (also used as anchor id) */
+      title: string;
+      /** List items */
+      items: Array<{
+        /** Optional bold label, e.g. "Activities" */
+        label?: string;
+        /** Item content */
+        value: React.ReactNode;
+      }>;
+    }>;
   };
   /** Technical skills section */
   technical: {

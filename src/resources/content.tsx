@@ -14,8 +14,8 @@ import { Line, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
   firstName: "AsterionVT",
-  lastName: "Nightcaller",
-  name: "Asterion Nightcaller",
+  lastName: "Voidcaller",
+  name: "Asterion Voidcaller",
   role: "VTuber / Producer / Software Dev / Engineer",
   avatar: "/images/gallery/asterion-portrait-smile.png",
   email: "[lynkazoyuu@gmail.com]",
@@ -91,10 +91,10 @@ const social: Social = [
 
 const home: Home = {
   path: "/",
-  image: "/images/gallery/Asterionvt - EYE BANNER.jpg",
+  image: "/api/og/generate",
   label: "Home",
-  title: `${person.name}'s Portfolio`,
-  description: "Asterion Nightcallers VTuber Profile",
+  title: `${person.name} | VTuber Realm`,
+  description: `${person.name}'s official VTuber Realm — Astral Elf wanderer, content creator, live streams, music & socials hub.`,
   headline: <>AsterionVT</>,
   featured: {
     display: true,
@@ -139,7 +139,7 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        My name is AsterionVT and I am a VTuber, Producer, Software Developer/Engineer. I like streaming and I love to produce content for the community. I have worked on various projects. My expertise lies in JavaScript, CSS, HTML, Node.js, and I am always looking for new challenges to further develop my skills.
+        "A fallen guardian of the moon, The Astral called once more."
       </>
     ),
   },
@@ -201,17 +201,25 @@ const about: About = {
   personality: {
     display: true, // set to false to hide this section
     title: "Personality",
-    description: (
-      <>
-        Charismatic but mischievous  flirts with danger (and sometimes with chat).
-        <br/><br/>
-        Switches between smooth, deep-toned voice acting and playful teasing.
-        <br/><br/>
-        Occasionally Lewd/Flirty.
-        <br/><br/>
-        Chaotic Evil.
-      </>
-    ),
+    sections: [
+      {
+        title: "Likes and Hobbies",
+        items: [
+          { label: "Activities", value: "VTubing, Producing Music, Gaming" },
+          { label: "Likes Playing", value: "Final Fantasy XIV, Arknights: Endfield, RPGs & Horror" },
+          { label: "Passions", value: "Anime, Art, Music, Hatsune Miku, Stars" },
+          { label: "Aesthetic", value: "Sparkly, Techwear, lots of straps and a long coat." },
+        ],
+      },
+      {
+        title: "Dislikes and Boundaries",
+        items: [
+          { value: "Drama & annoying behavior" },
+          { value: "Pushing my boundaries" },
+          { value: "Ignorance & abandonment" },
+        ],
+      },
+    ],
   },
   technical: {
     display: false, // set to false to hide this section
