@@ -1,3 +1,15 @@
+// YouTube Data API returns HTML-escaped strings (e.g. "&amp;", "&#39;")
+export function decodeHtmlEntities(str: string): string {
+  return str
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
 export async function getYouTubeSubs(link: string): Promise<string | null> {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
@@ -143,40 +155,72 @@ export async function getTwitchLiveStatus(login: string): Promise<TwitchStatus> 
   return { isLive: false };
 }
 
+// ---------------------------------------------------------------------------
+// YouTube helpers — quota-friendly
+// `search` costs 100 units per call; `channels`, `playlistItems` and `videos`
+// cost 1 unit each. Everything below avoids `search` entirely.
+// ---------------------------------------------------------------------------
+const YT_API = "https://youtube.googleapis.com/youtube/v3";
+
+// Known channel IDs (skip the lookup entirely for these)
+const KNOWN_CHANNEL_IDS: Record<string, string> = {
+  asterionvt: "UCUCNgIlApBB0eCZ34LSskyw",
+};
+
+/** Resolve a handle (e.g. "AsterionVT") to a channel ID. 1 unit, cached 24h. */
+export async function getYouTubeChannelId(handle: string): Promise<string | null> {
+  const clean = handle.replace(/^@/, "");
+  const known = KNOWN_CHANNEL_IDS[clean.toLowerCase()];
+  if (known) return known;
+
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const res = await fetch(`${YT_API}/channels?part=id&forHandle=@${clean}&key=${apiKey}`, {
+      next: { revalidate: 86400 },
+    });
+    if (!res.ok) {
+      console.error("YouTube Channel Lookup Error:", res.status, await res.text());
+      return null;
+    }
+    const data = await res.json();
+    return data.items?.[0]?.id ?? null;
+  } catch (e) {
+    console.error("YouTube Channel Lookup Error:", e);
+    return null;
+  }
+}
+
+/** Every channel's uploads playlist is its channel ID with "UC" swapped for "UU". */
+export function getUploadsPlaylistId(channelId: string): string {
+  return `UU${channelId.slice(2)}`;
+}
+
 export async function getLatestYouTubeVideoId(handle: string): Promise<string | null> {
   const apiKey = process.env.YOUTUBE_API_KEY;
-  if (apiKey) {
+  const channelId = await getYouTubeChannelId(handle);
+
+  if (apiKey && channelId) {
     try {
-      // Resolve channel ID (cache for 24 hours since it never changes)
-      const searchRes = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${handle}&key=${apiKey}`,
-        { next: { revalidate: 86400 } }
+      // 1 unit, cached 5 minutes
+      const res = await fetch(
+        `${YT_API}/playlistItems?part=contentDetails&playlistId=${getUploadsPlaylistId(channelId)}&maxResults=1&key=${apiKey}`,
+        { next: { revalidate: 300 } }
       );
-      if (searchRes.ok) {
-        const searchData = await searchRes.json();
-        const channelId = searchData.items?.[0]?.snippet?.channelId;
-        if (channelId) {
-          // Get latest video upload (cache for 30 minutes)
-          const uploadsRes = await fetch(
-            `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=1&order=date&type=video&key=${apiKey}`,
-            { next: { revalidate: 1800 } }
-          );
-          if (uploadsRes.ok) {
-            const uploadsData = await uploadsRes.json();
-            const latestVideoId = uploadsData.items?.[0]?.id?.videoId;
-            if (latestVideoId) return latestVideoId;
-          }
-        }
+      if (res.ok) {
+        const data = await res.json();
+        const latestVideoId = data.items?.[0]?.contentDetails?.videoId;
+        if (latestVideoId) return latestVideoId;
       }
     } catch (e) {
       console.warn("YouTube API latest video fetch failed, falling back to RSS:", e);
     }
   }
 
-  // Fallback to public RSS feed
+  // Fallback to public RSS feed (free, no quota)
   try {
     const feedRes = await fetch(
-      "https://www.youtube.com/feeds/videos.xml?channel_id=UCUCNgIlApBB0eCZ34LSskyw",
+      `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId ?? KNOWN_CHANNEL_IDS.asterionvt}`,
       { next: { revalidate: 300 } }
     );
     if (feedRes.ok) {
@@ -195,38 +239,56 @@ export interface YouTubeLiveStatus {
   isLive: boolean;
   title?: string;
   videoId?: string;
+  viewerCount?: number;
 }
 
+/**
+ * Live check costing 2 units (vs 100+ with search):
+ *  1. playlistItems on the uploads playlist (active streams appear here)
+ *  2. videos.list on those IDs → snippet.liveBroadcastContent === "live"
+ * Both cached 60s and shared between every page that calls this.
+ */
 export async function getYouTubeLiveStatus(handle: string): Promise<YouTubeLiveStatus> {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) return { isLive: false };
 
   try {
-    // Resolve channel ID (cache for 24 hours since it never changes)
-    const searchRes = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${handle}&key=${apiKey}`,
-      { next: { revalidate: 86400 } }
-    );
-    if (!searchRes.ok) return { isLive: false };
-    const searchData = await searchRes.json();
-    const channelId = searchData.items?.[0]?.snippet?.channelId;
+    const channelId = await getYouTubeChannelId(handle);
     if (!channelId) return { isLive: false };
 
-    // Search for active live stream (cache for 2 minutes to stay updated but avoid quota limits)
-    const liveRes = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&eventType=live&key=${apiKey}`,
-      { next: { revalidate: 120 } }
+    const playlistRes = await fetch(
+      `${YT_API}/playlistItems?part=contentDetails&playlistId=${getUploadsPlaylistId(channelId)}&maxResults=50&key=${apiKey}`,
+      { next: { revalidate: 60 } }
     );
-    if (!liveRes.ok) {
-      console.error("YouTube Live Search API Error:", liveRes.status, await liveRes.text());
+    if (!playlistRes.ok) {
+      console.error("YouTube Live (playlist) API Error:", playlistRes.status, await playlistRes.text());
       return { isLive: false };
     }
-    const liveData = await liveRes.json();
-    if (liveData.items && liveData.items.length > 0) {
+    const playlistData = await playlistRes.json();
+    const ids: string[] = (playlistData.items || [])
+      .map((i: { contentDetails?: { videoId?: string } }) => i.contentDetails?.videoId)
+      .filter(Boolean);
+    if (ids.length === 0) return { isLive: false };
+
+    const videosRes = await fetch(
+      `${YT_API}/videos?part=snippet,liveStreamingDetails&id=${ids.join(",")}&key=${apiKey}`,
+      { next: { revalidate: 60 } }
+    );
+    if (!videosRes.ok) {
+      console.error("YouTube Live (videos) API Error:", videosRes.status, await videosRes.text());
+      return { isLive: false };
+    }
+    const videosData = await videosRes.json();
+    const live = (videosData.items || []).find(
+      (v: { snippet?: { liveBroadcastContent?: string } }) => v.snippet?.liveBroadcastContent === "live"
+    );
+    if (live) {
+      const viewers = Number(live.liveStreamingDetails?.concurrentViewers);
       return {
         isLive: true,
-        title: liveData.items[0].snippet.title,
-        videoId: liveData.items[0].id.videoId,
+        title: decodeHtmlEntities(live.snippet?.title || ""),
+        videoId: live.id,
+        viewerCount: Number.isFinite(viewers) ? viewers : undefined,
       };
     }
   } catch (e) {

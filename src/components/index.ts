@@ -11,6 +11,7 @@ export { CustomMDX } from "@/components/mdx";
 export { SocialStatus } from "@/components/SocialStatus";
 export { InteractiveMesh } from "@/components/InteractiveMesh";
 export { TwitchEmbed } from "@/components/TwitchEmbed";
+export { YouTubeEmbed } from "@/components/YouTubeEmbed";
 export { ShortsCarousel } from "@/components/ShortsCarousel";
 export { FeaturedBadge } from "@/components/FeaturedBadge";
 export { MarkContentSeen } from "@/components/MarkContentSeen";

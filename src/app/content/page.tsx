@@ -15,18 +15,26 @@ import {
   Meta,
 } from "@once-ui-system/core";
 import { baseURL, person } from "@/resources";
-import { getTwitchLiveStatus, type TwitchStatus } from "@/lib/social";
-import { TwitchEmbed, ShortsCarousel, MarkContentSeen, ScrollReveal } from "@/components";
+import {
+  getTwitchLiveStatus,
+  getYouTubeLiveStatus,
+  getYouTubeChannelId,
+  getUploadsPlaylistId,
+  decodeHtmlEntities,
+} from "@/lib/social";
+import { TwitchEmbed, YouTubeEmbed, ShortsCarousel, MarkContentSeen, ScrollReveal } from "@/components";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
 
 export async function generateMetadata() {
-  const twitchStatus = await getTwitchLiveStatus("asterionvt").catch(() => ({
-    isLive: false,
-    title: undefined as string | undefined,
-  }));
-  const isLive = Boolean(twitchStatus?.isLive);
+  const [twitchStatus, youtubeLiveStatus] = await Promise.all([
+    getTwitchLiveStatus("asterionvt").catch(() => ({ isLive: false, title: undefined as string | undefined })),
+    getYouTubeLiveStatus("AsterionVT").catch(() => ({ isLive: false, title: undefined as string | undefined })),
+  ]);
+  const isLive = Boolean(twitchStatus?.isLive || youtubeLiveStatus?.isLive);
+  const livePlatform = twitchStatus?.isLive ? "Twitch" : youtubeLiveStatus?.isLive ? "YouTube" : null;
+  const liveTitle = twitchStatus?.isLive ? twitchStatus.title : youtubeLiveStatus?.title;
 
   const title = isLive
     ? `🔴 LIVE NOW: ${person.name} | Content & Streams`
@@ -36,8 +44,8 @@ export async function generateMetadata() {
   ogParams.set("title", title);
   if (isLive) {
     ogParams.set("live", "true");
-    ogParams.set("platform", "Twitch");
-    if (twitchStatus.title) ogParams.set("streamTitle", twitchStatus.title);
+    if (livePlatform) ogParams.set("platform", livePlatform);
+    if (liveTitle) ogParams.set("streamTitle", liveTitle);
   }
 
   const meta = Meta.generate({
@@ -79,6 +87,9 @@ interface VideoDetail {
   contentDetails?: {
     duration?: string;
   };
+  snippet?: {
+    liveBroadcastContent?: string;
+  };
 }
 
 interface YouTubeMedia {
@@ -90,8 +101,6 @@ interface YouTubeMedia {
 }
 
 interface YouTubeData {
-  isLive: boolean;
-  liveTitle: string;
   shorts: YouTubeMedia[];
   videos: YouTubeMedia[];
 }
@@ -159,110 +168,71 @@ async function getYouTubeFromRss(channelId = "UCUCNgIlApBB0eCZ34LSskyw"): Promis
   }
 }
 
-// YouTube fetch helpers
-async function getYouTubeContentAndLive(handle: string, apiKey?: string): Promise<YouTubeData> {
-  if (apiKey) {
+// YouTube uploads fetch — 2 quota units per refresh (playlistItems + videos), no `search`
+async function getYouTubeContent(handle: string, apiKey?: string): Promise<YouTubeData> {
+  const channelId = await getYouTubeChannelId(handle);
+
+  if (apiKey && channelId) {
     try {
-      // 1. Resolve Channel ID
-      const searchRes = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${handle}&key=${apiKey}`,
-        { next: { revalidate: 3600 } }
+      // 1. Fetch latest 30 uploads (1 unit)
+      const playlistRes = await fetch(
+        `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${getUploadsPlaylistId(channelId)}&maxResults=30&key=${apiKey}`,
+        { next: { revalidate: 300 } }
       );
-      if (searchRes.ok) {
-        const searchData = await searchRes.json();
-        const channelId = searchData.items?.[0]?.snippet?.channelId;
-        if (channelId) {
-          // 2. Check Live Status
-          let isLive = false;
-          let liveTitle = "";
-          try {
-            const liveRes = await fetch(
-              `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&eventType=live&key=${apiKey}`,
-              { next: { revalidate: 60 } }
-            );
-            if (liveRes.ok) {
-              const liveData = await liveRes.json();
-              if (liveData.items && liveData.items.length > 0) {
-                isLive = true;
-                liveTitle = liveData.items[0].snippet?.title || "";
-              }
-            }
-          } catch (e) {
-            console.error("YouTube Live check failed:", e);
-          }
+      if (playlistRes.ok) {
+        const playlistData = await playlistRes.json();
+        const items: PlaylistItem[] = playlistData.items || [];
 
-          // 3. Fetch Uploads Playlist ID
-          const channelRes = await fetch(
-            `https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`,
-            { next: { revalidate: 3600 } }
+        // 2. Fetch durations + broadcast state to split shorts/videos (1 unit)
+        const videoIds = items
+          .map((item: PlaylistItem) => item.snippet?.resourceId?.videoId)
+          .filter((id): id is string => typeof id === "string");
+
+        let videosDetails: VideoDetail[] = [];
+        if (videoIds.length > 0) {
+          const videosRes = await fetch(
+            `https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds.join(",")}&key=${apiKey}`,
+            { next: { revalidate: 300 } }
           );
-          if (channelRes.ok) {
-            const channelData = await channelRes.json();
-            const uploadsPlaylistId = channelData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
-            if (uploadsPlaylistId) {
-              // 4. Fetch Latest 30 uploads
-              const playlistRes = await fetch(
-                `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=30&key=${apiKey}`,
-                { next: { revalidate: 300 } }
-              );
-              if (playlistRes.ok) {
-                const playlistData = await playlistRes.json();
-                const items: PlaylistItem[] = playlistData.items || [];
-
-                // 5. Fetch durations to filter shorts vs videos
-                const videoIds = items
-                  .map((item: PlaylistItem) => item.snippet?.resourceId?.videoId)
-                  .filter((id): id is string => typeof id === "string");
-
-                let videosDetails: VideoDetail[] = [];
-                if (videoIds.length > 0) {
-                  const videosRes = await fetch(
-                    `https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${apiKey}`,
-                    { next: { revalidate: 300 } }
-                  );
-                  if (videosRes.ok) {
-                    const videosData = await videosRes.json();
-                    videosDetails = videosData.items || [];
-                  }
-                }
-
-                const durationMap = new Map<string, string>(
-                  videosDetails
-                    .map((v: VideoDetail) => {
-                      const id = v.id;
-                      const duration = v.contentDetails?.duration;
-                      return id && duration ? [id, duration] as [string, string] : null;
-                    })
-                    .filter((entry): entry is [string, string] => entry !== null)
-                );
-
-                const mediaList = items.map((item: PlaylistItem) => {
-                  const videoId = item.snippet?.resourceId?.videoId || "";
-                  const durationISO = durationMap.get(videoId) || "";
-                  const durationSeconds = parseISO8601Duration(durationISO);
-                  return {
-                    id: videoId,
-                    title: item.snippet?.title || "Untitled Video",
-                    thumbnail:
-                      item.snippet?.thumbnails?.maxres?.url ||
-                      item.snippet?.thumbnails?.standard?.url ||
-                      item.snippet?.thumbnails?.high?.url ||
-                      item.snippet?.thumbnails?.medium?.url ||
-                      item.snippet?.thumbnails?.default?.url ||
-                      "/images/og/home.jpg",
-                    publishedAt: item.snippet?.publishedAt || new Date().toISOString(),
-                    isShort: durationSeconds > 0 && durationSeconds <= 60,
-                  };
-                });
-
-                const shorts = mediaList.filter((m) => m.isShort).slice(0, 10);
-                const videos = mediaList.filter((m) => !m.isShort).slice(0, 10);
-                if (shorts.length > 0 || videos.length > 0) {
-                  return { isLive, liveTitle, shorts, videos };
-                }
-              }
-            }
+          if (videosRes.ok) {
+            const videosData = await videosRes.json();
+            videosDetails = videosData.items || [];
           }
+        }
+
+        const detailMap = new Map<string, VideoDetail>(
+          videosDetails.filter((v) => v.id).map((v) => [v.id as string, v])
+        );
+
+        const mediaList = items
+          // Live/upcoming broadcasts are shown in the YouTube card, not the uploads grid
+          .filter((item: PlaylistItem) => {
+            const state = detailMap.get(item.snippet?.resourceId?.videoId || "")?.snippet?.liveBroadcastContent;
+            return state !== "live" && state !== "upcoming";
+          })
+          .map((item: PlaylistItem) => {
+            const videoId = item.snippet?.resourceId?.videoId || "";
+            const durationISO = detailMap.get(videoId)?.contentDetails?.duration || "";
+            const durationSeconds = parseISO8601Duration(durationISO);
+            return {
+              id: videoId,
+              title: decodeHtmlEntities(item.snippet?.title || "Untitled Video"),
+              thumbnail:
+                item.snippet?.thumbnails?.maxres?.url ||
+                item.snippet?.thumbnails?.standard?.url ||
+                item.snippet?.thumbnails?.high?.url ||
+                item.snippet?.thumbnails?.medium?.url ||
+                item.snippet?.thumbnails?.default?.url ||
+                "/images/og/home.jpg",
+              publishedAt: item.snippet?.publishedAt || new Date().toISOString(),
+              isShort: durationSeconds > 0 && durationSeconds <= 60,
+            };
+          });
+
+        const shorts = mediaList.filter((m) => m.isShort).slice(0, 10);
+        const videos = mediaList.filter((m) => !m.isShort).slice(0, 10);
+        if (shorts.length > 0 || videos.length > 0) {
+          return { shorts, videos };
         }
       }
     } catch (e) {
@@ -270,26 +240,24 @@ async function getYouTubeContentAndLive(handle: string, apiKey?: string): Promis
     }
   }
 
-  // Graceful fallback to YouTube public RSS feed (no API key needed)
-  const rssData = await getYouTubeFromRss("UCUCNgIlApBB0eCZ34LSskyw");
-  return {
-    isLive: false,
-    liveTitle: "",
-    shorts: rssData.shorts,
-    videos: rssData.videos,
-  };
+  // Graceful fallback to YouTube public RSS feed (no API key / quota needed)
+  return getYouTubeFromRss(channelId ?? "UCUCNgIlApBB0eCZ34LSskyw");
 }
 
 export default async function Content() {
   const youtubeApiKey = process.env.YOUTUBE_API_KEY;
 
-  // Parallel fetches for Twitch status and YouTube content/status
-  const [twitchStatus, youtubeData] = await Promise.all([
+  // Parallel fetches — the YouTube live check shares its cache with the home page
+  const [twitchStatus, youtubeLive, youtubeData] = await Promise.all([
     getTwitchLiveStatus("asterionvt"),
-    getYouTubeContentAndLive("AsterionVT", youtubeApiKey),
+    getYouTubeLiveStatus("AsterionVT"),
+    getYouTubeContent("AsterionVT", youtubeApiKey),
   ]);
 
   const latestVideoId = youtubeData.videos[0]?.id || youtubeData.shorts[0]?.id || null;
+  const youtubeLiveUrl = youtubeLive.videoId
+    ? `https://www.youtube.com/watch?v=${youtubeLive.videoId}`
+    : "https://www.youtube.com/@AsterionVT/live";
 
   return (
     <Column maxWidth="m" paddingTop="32" gap="m" fillWidth horizontal="center">
@@ -336,6 +304,54 @@ export default async function Content() {
                 }}
               >
                 {twitchStatus.title || "AsterionVT is Live!"}
+              </Text>
+            </Row>
+          </SmartLink>
+        </ScrollReveal>
+      )}
+
+      {/* Floating YouTube Live Widget */}
+      {youtubeLive.isLive && (
+        <ScrollReveal translateY="8" fillWidth>
+          <SmartLink
+            href={youtubeLiveUrl}
+            style={{ textDecoration: "none", marginBottom: "-8px" }}
+          >
+            <Row
+              vertical="center"
+              radius="full"
+              paddingY="8"
+              paddingX="16"
+              gap="12"
+              style={{
+                background: "rgba(255, 48, 64, 0.18)",
+                border: "1px solid rgba(255, 48, 64, 0.35)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "0 0 15px rgba(255, 48, 64, 0.2)",
+                maxWidth: "100%",
+              }}
+              className="youtube-live-pill"
+            >
+              <Row gap="8" vertical="center">
+                <Badge background="danger-alpha-strong" onBackground="danger-strong" style={{ borderRadius: "9999px" }}>
+                  LIVE
+                </Badge>
+                <Text weight="strong" style={{ color: "#ff6b78" }}>
+                  YouTube
+                </Text>
+              </Row>
+              <Line style={{ background: "rgba(255, 48, 64, 0.3)" }} vert height="16" />
+              <Text
+                variant="body-default-s"
+                style={{
+                  color: "#ffd9dc",
+                  maxWidth: "12rem",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {youtubeLive.title || "AsterionVT is Live!"}
               </Text>
             </Row>
           </SmartLink>
@@ -426,7 +442,10 @@ export default async function Content() {
             radius="l"
             padding="24"
             gap="16"
-            style={{ transition: "all 0.25s ease" }}
+            style={{
+              transition: "all 0.25s ease",
+              gridColumn: youtubeLive.isLive ? "1 / -1" : undefined
+            }}
           >
             <Row vertical="center" gap="16" fillWidth>
               <Avatar src={person.avatar} size="l" />
@@ -438,7 +457,7 @@ export default async function Content() {
                   @AsterionVT
                 </Text>
               </Column>
-              {youtubeData.isLive ? (
+              {youtubeLive.isLive ? (
                 <Badge background="danger-alpha-strong" onBackground="danger-strong" style={{ animation: "pulse 2s infinite" }}>
                   LIVE
                 </Badge>
@@ -449,21 +468,26 @@ export default async function Content() {
               )}
             </Row>
 
-            {youtubeData.isLive && (
-              <Column gap="8" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
+            {youtubeLive.isLive && (
+              <Column gap="12" fillWidth borderTop="neutral-alpha-weak" paddingTop="16">
                 <Text variant="body-default-s" weight="strong" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                  {youtubeData.liveTitle}
+                  {youtubeLive.title}
                 </Text>
-                <Text variant="body-default-xs" onBackground="neutral-weak">
-                  🔴 Live right now!
+                <Text variant="body-default-xs" onBackground="neutral-weak" paddingBottom="4">
+                  {typeof youtubeLive.viewerCount === "number"
+                    ? `🔴 Watching with ${youtubeLive.viewerCount} viewers`
+                    : "🔴 Live right now!"}
                 </Text>
+                {youtubeLive.videoId && (
+                  <YouTubeEmbed videoId={youtubeLive.videoId} title={youtubeLive.title} />
+                )}
               </Column>
             )}
 
             <Row fillWidth horizontal="end" paddingTop="8">
               <Button
-                href="https://www.youtube.com/@AsterionVT"
-                label="Go to YouTube"
+                href={youtubeLive.isLive ? youtubeLiveUrl : "https://www.youtube.com/@AsterionVT"}
+                label={youtubeLive.isLive ? "Watch on YouTube" : "Go to YouTube"}
                 prefixIcon="youtube"
                 suffixIcon="arrowUpRight"
                 size="s"
